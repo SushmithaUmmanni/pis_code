@@ -1,35 +1,49 @@
-# import the necessary packages
+# -*- coding: utf-8 -*-
+"""Implement a very simple linear classifier.
+
+The purpose of this example is to simply show how we would initialize a weight matrix W, b
+vector b, and then use these parameters to classify an image via a simple dot product.
+
+Example:
+    $ python linear_example.py
+"""
 import numpy as np
 import cv2
 
-# initialize the class labels and set the seed of the pseudorandom
-# number generator so we can reproduce our results
-labels = ["dog", "cat", "panda"]
-np.random.seed(1)
 
-# be * learned * by our model, but for the sake of this example,
-# let's use random values
-W = np.random.randn(3, 3072)
-b = np.random.randn(3)
+def main():
+    """Run simple linear classifier.
+    """
+    # initialize the class labels and set the seed of the pseudorandom
+    # number generator so we can reproduce our results
+    labels = ["dog", "cat", "panda"]
+    np.random.seed(1)
 
-# load our example image, resize it, and then flatten it into our
-# "feature vector" representation
-orig = cv2.imread("/home/miro/workspace/pyimagesearch/SB_Code/chapter08-parameterized_learning/beagle.png")
-image = cv2.resize(orig, (32, 32)).flatten()
+    # be * learned * by our model, but for the sake of this example, let's use random values
+    W = np.random.randn(3, 3072)
+    b = np.random.randn(3)
 
-# compute the output scores by taking the dot product between the
-# weight matrix and image pixels, followed by adding in the bias
-scores = W.dot(image) + b
+    # load our example image, resize it, and then flatten it into our
+    # "feature vector" representation
+    orig = cv2.imread("beagle.png")
+    image = cv2.resize(orig, (32, 32)).flatten()
 
-# loop over the scores + labels and display them
-for (label, score) in zip(labels, scores):
-    print("[INFO] {}: {:.2f}".format(label, score))
+    # compute the output scores by taking the dot product between the
+    # weight matrix and image pixels, followed by adding in the b
+    scores = W.dot(image) + b
 
-# draw the label with the highest score on the image as our
-# prediction
-cv2.putText(orig, "Label: {}".format(labels[np.argmax(scores)]),
-    (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    # loop over the scores + labels and display them
+    for (label, score) in zip(labels, scores):
+        print("[INFO] {}: {:.2f}".format(label, score))
 
-# display our input image
-cv2.imshow("Image", orig)
-cv2.waitKey(0)
+    # draw the label with the highest score on the image as our prediction
+    cv2.putText(orig, "Label: {}".format(labels[np.argmax(scores)]), (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+    # display our input image
+    cv2.imshow("Image", orig)
+    cv2.waitKey(0)
+
+
+if __name__ == '__main__':
+    main()
