@@ -23,8 +23,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from imutils import paths
-from pyimagesearch.preprocessing import SimplePreprocessor
-from pyimagesearch.datasets import SimpleDatasetLoader
+from .pyimagesearch.preprocessing import SimplePreprocessor
+from .pyimagesearch.datasets import SimpleDatasetLoader
 
 
 def main():

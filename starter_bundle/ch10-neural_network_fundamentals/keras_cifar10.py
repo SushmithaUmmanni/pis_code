@@ -10,13 +10,13 @@ Attributes:
 """
 import argparse
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import classification_report
 from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import SGD
 from keras.datasets import cifar10
-import matplotlib.pyplot as plt
 
 
 def main():
@@ -56,14 +56,18 @@ def main():
     print("[INFO] training network...")
     sgd = SGD(0.01)
     model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["accuracy"])
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          epochs=100, batch_size=32)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          epochs=100,
+                          batch_size=32)
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=32)
     print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1), target_names=label_names))
+                                predictions.argmax(axis=1),
+                                target_names=label_names))
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")

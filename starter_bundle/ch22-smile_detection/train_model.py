@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from keras.preprocessing.image import img_to_array
 from keras.utils import np_utils
-from pyimagesearch.nn.conv import LeNet
+from .pyimagesearch.nn.conv import LeNet
 
 
 def main():

@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn import datasets
-from pyimagesearch.nn import NeuralNetwork
+from .pyimagesearch.nn import NeuralNetwork
 
 
 def main():
