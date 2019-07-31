@@ -11,11 +11,11 @@ Attributes:
     dataset (str):
         The path to where our input image dataset resides on disk.
     neighbors (int, optional):
-        The number of neighbors k to apply when using the k-NN algorithm.
+        The number of neighbors k to apply when using the k-NN algorithm (default = 1).
     jobs (int, optional):
         the number of concurrent jobs to run when computing the distance
         between an input data point and the training set. A value of -1 will use all available
-        cores on the processor.
+        cores on the processor (default = -1).
 """
 import argparse
 from sklearn.neighbors import KNeighborsClassifier
@@ -23,8 +23,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from imutils import paths
-from .pyimagesearch.preprocessing import SimplePreprocessor
-from .pyimagesearch.datasets import SimpleDatasetLoader
+from pyimagesearch.preprocessing import SimplePreprocessor
+from pyimagesearch.datasets import SimpleDatasetLoader
 
 
 def main():
