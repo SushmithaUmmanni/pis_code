@@ -6,14 +6,14 @@ This class is responsible for taking an input set of NumPy arrays
 
 Attributes:
     dims (tuple):
-        The dims parameter controls the dimension or shape of the data we will be storing
+        dims parameter controls the dimension or shape of the data we will be storing
         in the dataset.
     output_path (str):
-        Path to where our output HDF5 file will be stored on disk.
+        path to where our output HDF5 file will be stored on disk.
     data_key (str, optional):
-        Name of the dataset (default = "images")
-    buf_size (int, optional):
-        Buf_size controls the size of our in-memory buffer (default = 1000)
+        name of the dataset (default = "images")
+    buffer_size (int, optional):
+        buffer_size controls the size of our in-memory buffer (default = 1000)
 """
 import os
 import h5py
@@ -21,12 +21,8 @@ import h5py
 
 class HDF5DatasetWriter:
     """Write data to to HDF5 format.
-
-    Raises:
-        an: [description]
-        ValueError: [description]
     """
-    def __init__(self, dims, output_path, data_key="images", buf_size=1000):
+    def __init__(self, dims, output_path, data_key="images", buffer_size=1000):
         """Initialize HDF5 dataset writer
 
         Arguments:
@@ -35,10 +31,10 @@ class HDF5DatasetWriter:
 
         Keyword Arguments:
             data_key {str} -- name of the dataset (default: {"images"})
-            buf_size {int} -- size of the in-memory buffer (default: {1000})
+            buffer_size {int} -- size of the in-memory buffer (default: {1000})
 
         Raises:
-            ValueError: the supplied `output_path` already exists and cannot be overwritten
+            ValueError: supplied `output_path` already exists and cannot be overwritten
         """
         # check to see if the output path exists, and if so, raise an exception
         if os.path.exists(output_path):
@@ -51,7 +47,7 @@ class HDF5DatasetWriter:
         self.labels = self.db.create_dataset("labels", (dims[0],), dtype="int")
         # store the buffer size, then initialize the buffer itself
         # along with the index into the datasets
-        self.buf_size = buf_size
+        self.buffer_size = buffer_size
         self.buffer = {"data": [], "labels": []}
         self.idx = 0
 
@@ -65,7 +61,7 @@ class HDF5DatasetWriter:
         self.buffer["data"].extend(rows)
         self.buffer["labels"].extend(labels)
         # check to see if the buffer needs to be flushed to disk
-        if len(self.buffer["data"]) >= self.buf_size:
+        if len(self.buffer["data"]) >= self.buffer_size:
             self.flush()
 
     def flush(self):
