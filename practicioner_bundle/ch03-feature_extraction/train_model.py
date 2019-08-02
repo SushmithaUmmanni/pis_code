@@ -16,8 +16,8 @@ Examples:
 Attributes:
     db (str):
         Path HDF5 database
-    model (pickle)
-        Path to output model
+    model (path)
+        Path to the pre-trained scikit-learn classifier residing on disk
     jobs (int, optional)
         Specify the number of concurrent jobs when running a grid search to tune our
         hyperparameters (default = -1)
@@ -52,15 +52,14 @@ def main():
     # grid search where we evaluate our model for each value of C
     print("[INFO] tuning hyperparameters...")
     params = {"C": [0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]}
-    model = GridSearchCV(LogisticRegression(solver="lbfgs",
-                                            multi_class="auto"), params, cv=3, n_jobs=args["jobs"])
+    model = GridSearchCV(LogisticRegression(solver="lbfgs", multi_class="auto"),
+                         params, cv=3, n_jobs=args["jobs"])
     model.fit(db["features"][:i], db["labels"][:i])
     print("[INFO] best hyperparameters: {}".format(model.best_params_))
     # evaluate the model
     print("[INFO] evaluating...")
     preds = model.predict(db["features"][i:])
-    print(classification_report(db["labels"][i:], preds,
-                                target_names=db["label_names"]))
+    print(classification_report(db["labels"][i:], preds, target_names=db["label_names"]))
     # serialize the model to disk
     print("[INFO] saving model...")
     f = open(args["model"], "wb")
