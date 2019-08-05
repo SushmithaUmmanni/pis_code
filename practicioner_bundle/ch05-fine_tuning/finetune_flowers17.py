@@ -6,9 +6,9 @@ Example:
 
 Attributes:
     dataset (str):
-        Path to the input dataset
+        path to the input dataset
     model (str):
-        Path to our output serialized weights after training
+        path to our output serialized weights after training
 """
 import os
 import argparse
