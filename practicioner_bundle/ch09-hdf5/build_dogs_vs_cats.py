@@ -54,16 +54,16 @@ def main():
     aap = AspectAwarePreprocessor(256, 256)
     (R, G, B) = ([], [], [])
     # loop over the dataset tuples
-    for (dataset_type, paths, labels, output_path) in datasets:
+    for (dataset_type, path_list, labels, output_path) in datasets:
         # create HDF5 writer
         print("[INFO] building {}...".format(output_path))
-        writer = HDF5DatasetWriter((len(paths), 256, 256, 3), output_path)
+        writer = HDF5DatasetWriter((len(path_list), 256, 256, 3), output_path)
         # initialize the progress bar
         widgets = ["Building Dataset: ", progressbar.Percentage(), " ",
                    progressbar.Bar(), " ", progressbar.ETA()]
-        pbar = progressbar.ProgressBar(maxval=len(paths), widgets=widgets).start()
+        pbar = progressbar.ProgressBar(maxval=len(path_list), widgets=widgets).start()
         # loop over the image paths
-        for (i, (path, label)) in enumerate(zip(paths, labels)):
+        for (i, (path, label)) in enumerate(zip(path_list, labels)):
             # load the image and process it
             image = cv2.imread(path)
             image = aap.preprocess(image)
@@ -82,9 +82,9 @@ def main():
         writer.close()
     # construct a dictionary of averages, then serialize the means to a JSON file
     print("[INFO] serializing means...")
-    D = {"R": np.mean(R), "G": np.mean(G), "B": np.mean(B)}
+    rgb_dict = {"R": np.mean(R), "G": np.mean(G), "B": np.mean(B)}
     f = open(config.DATASET_MEAN, "w")
-    f.write(json.dumps(D))
+    f.write(json.dumps(rgb_dict))
     f.close()
 
 
