@@ -1,16 +1,17 @@
 """Import custom conv packages
 """
-from .shallownet import ShallowNet
-from .lenet import LeNet
-from .minivggnet import MiniVGGNet
-from .fcheadnet import FCHeadNet
 from .alexnet import AlexNet
-
+from .lenet import LeNet
+from .fcheadnet import FCHeadNet
+from .minigooglenet import MiniGoogLeNet
+from .minivggnet import MiniVGGNet
+from .shallownet import ShallowNet
 
 __all__ = [
-    'ShallowNet',
-    'LeNet',
-    'MiniVGGNet',
-    'FCHeadNet',
     'AlexNet',
+    'FCHeadNet',
+    'LeNet',
+    'MiniGoogLeNet',
+    'MiniVGGNet',
+    'ShallowNet',
     ]

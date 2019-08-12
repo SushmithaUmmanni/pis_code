@@ -86,9 +86,21 @@ class MiniGoogLeNet:
 
     @staticmethod
     def build(width, height, depth, classes):
+        """Build MiniGoogLeNet architecture
+
+        Arguments:
+            width {int} -- [description]
+            height {int} -- [description]
+            depth {int} -- [description]
+            classes {int} -- [description]
+
+        Returns:
+            [type] -- MiniGoogLeNet
+        """
         # initialize the input shape to be "channels last" and the channels dimension itself
         input_shape = (height, width, depth)
         chanel_dim = -1
+
         # if we are using "channels first", update the input shape and channels dimension
         if K.image_data_format() == "channels_first":
             input_shape = (depth, height, width)
@@ -120,7 +132,9 @@ class MiniGoogLeNet:
         x = Flatten()(x)
         x = Dense(classes)(x)
         x = Activation("softmax")(x)
+
         # create the model
         model = Model(inputs, x, name="googlenet")
+
         # return the constructed network architecture
         return model
