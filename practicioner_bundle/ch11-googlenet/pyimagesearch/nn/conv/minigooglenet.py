@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """Implementation of MiniGoogLeNet architecture.
+
+This implementation is based on the original implemetation of GoogLeNet.
+The authors of the net used BN before Activation layer.
+This should be switched.
 """
 from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import Conv2D
@@ -18,7 +22,7 @@ from keras import backend as K
 # todo: type of padding | what type does it return? | input layer type
 
 class MiniGoogLeNet:
-    """Implementation of MiniVGGNet architecture
+    """Implementation of MiniGoogLeNet architecture
     """
     @staticmethod
     def conv_module(x, K, kX, kY, stride, chanel_dim, padding="same"):
@@ -40,8 +44,8 @@ class MiniGoogLeNet:
         """
         # define a CONV => BN => RELU pattern
         x = Conv2D(K, (kX, kY), strides=stride, padding=padding)(x)
-        x = Activation("relu")(x)
         x = BatchNormalization(axis=chanel_dim)(x)
+        x = Activation("relu")(x)
         # return the block
         return x
 

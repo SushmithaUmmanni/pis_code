@@ -1,4 +1,5 @@
-# import the necessary packages
+"""Configuration file for tiny imagenet dataset
+"""
 from os import path
 
 # define the paths to the training and validation directories
