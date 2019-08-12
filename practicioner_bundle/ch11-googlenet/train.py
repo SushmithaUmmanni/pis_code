@@ -1,4 +1,25 @@
+# -*- coding: utf-8 -*-
+"""Train DeeperGoogLeNet
 
+Example:
+    $ python train.py --checkpoints output/checkpoints
+
+    $ python train.py --checkpoints output/checkpoints
+                    --model output/checkpoints/epoch_25.hdf5
+                    --start-epoch 25
+
+
+python train.py --checkpoints output/checkpoints \
+--model output/checkpoints/epoch_35.hdf5 --start-epoch 35
+
+
+
+Attributes:
+    model (str):
+        the path to the output file where MiniGoogLeNet will be serialized after training
+    output (str):
+        path to our output dir where we will store any plots, logs, etc
+"""
 import json
 import argparse
 import keras.backend as K
@@ -69,6 +90,27 @@ def main():
         print("[INFO] old learning rate: {}".format(K.get_value(model.optimizer.lr)))
         K.set_value(model.optimizer.lr, 1e-5)
         print("[INFO] new learning rate: {}".format(K.get_value(model.optimizer.lr)))
+
+    # construct the set of callbacks
+    callbacks = [
+    EpochCheckpoint(args["checkpoints"], every=5,
+                    startAt=args["start_epoch"]),
+    TrainingMonitor(config.FIG_PATH, jsonPath=config.JSON_PATH,
+                    startAt=args["start_epoch"])]
+
+    # train the network
+    model.fit_generator(
+        trainGen.generator(),
+        steps_per_epoch=trainGen.numImages // 64,
+        validation_data=valGen.generator(),
+        validation_steps=valGen.numImages // 64,
+        epochs=10,
+        max_queue_size=10,
+        callbacks=callbacks, verbose=1)
+
+    # close the databases
+    trainGen.close()
+    valGen.close()
 
 
 if __name__ == "__main__":

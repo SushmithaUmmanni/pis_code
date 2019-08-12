@@ -111,20 +111,17 @@ class NeuralNetwork:
             x {float} -- An individual data point from our design matrix
             y {float} -- The corresponding class label
         """
-        # construct our list of output activations for each layer as our data point flows through
-        # the network; the first activation is a special case -- it's just the input
-        # feature vector itself
+        # construct our list of output activations for each layer as our data point flows through the network;
+        # the first activation is a special case -- it's just the input feature vector itself
         activations = [np.atleast_2d(x)]
 
         # FEEDFORWARD:
         # loop over the layers in the network
         for layer in np.arange(0, len(self.W)):
-            # feedforward the activation at the current layer by taking the dot product between the
-            # activation and the weight matrix -- this is called the "net input"
-            # to the current layer
+            # feed-forward the activation at the current layer by taking the dot product between the activation and
+            # the weight matrix -- this is called the "net input" to the current layer
             net = activations[layer].dot(self.W[layer])
-            # computing the "net output" is simply applying our
-            # nonlinear activation function to the net input
+            # computing the "net output" is simply applying our nonlinear activation function to the net input
             out = self.sigmoid(net)
             # once we have the net output, add it to our list of activations
             activations.append(out)
@@ -137,14 +134,12 @@ class NeuralNetwork:
         # entry in the deltas is simply the error of the output layer times the derivative
         # of our activation function for the output value
         deltas = [error * self.sigmoid_deriv(activations[-1])]
-        # once you understand the chain rule it becomes super easy to implement with a `for` loop
-        # -- simply loop over the layers in reverse order (ignoring the last two since we
-        # already have taken them into account)
+        # once you understand the chain rule it becomes super easy to implement with a `for` loop -- simply loop
+        # over the layers in reverse order (ignoring the last two since we already have taken them into account)
         for layer in np.arange(len(activations) - 2, 0, -1):
-            # the delta for the current layer is equal to the delta of the *previous layer* dotted
-            # with the weight matrix of the current layer, followed by multiplying the delta
-            # by the derivative of the nonlinear activation function
-            # for the activations of the current layer
+            # the delta for the current layer is equal to the delta of the *previous layer* dotted with the weight
+            # matrix of the current layer, followed by multiplying the delta by the derivative of the nonlinear
+            # activation function for the activations of the current layer
             delta = deltas[-1].dot(self.W[layer].T)
             delta = delta * self.sigmoid_deriv(activations[layer])
             deltas.append(delta)
