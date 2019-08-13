@@ -18,7 +18,7 @@ def main():
     # to the range [0, 1] (each image is represented by an 8 x 8 = 64-dim feature vector)
     print("[INFO] loading MNIST (sample) dataset...")
     digits = datasets.load_digits()
-    data = digits.data.astype('float')  # pylint: disable=no-member
+    data = digits.data.astype("float")  # pylint: disable=no-member
     data = (data - data.min()) / (data.max() - data.min())
     print("[INFO] samples: {}, dim: {}".format(data.shape[0], data.shape[1]))
 
