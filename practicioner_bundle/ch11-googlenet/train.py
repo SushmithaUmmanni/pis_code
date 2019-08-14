@@ -4,14 +4,13 @@
 Example:
     $ python train.py --checkpoints output/checkpoints
 
-    $ python train.py --checkpoints output/checkpoints
-                    --model output/checkpoints/epoch_25.hdf5
-                    --start-epoch 25
+    $ python train.py --checkpoints output/checkpoints \
+                      --model output/checkpoints/epoch_25.hdf5 \
+                      --start-epoch 25
 
-
-python train.py --checkpoints output/checkpoints \
---model output/checkpoints/epoch_35.hdf5 --start-epoch 35
-
+    $ python train.py --checkpoints output/checkpoints \
+                      --model output/checkpoints/epoch_35.hdf5 \
+                      --start-epoch 35
 
 
 Attributes:
