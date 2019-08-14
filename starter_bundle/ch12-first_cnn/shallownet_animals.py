@@ -38,16 +38,19 @@ def main():
     image_paths = list(paths.list_images(args["dataset"]))
 
     # initialize the image preprocessors
-    preprocessor = SimplePreprocessor(32, 32)
-    iap = ImageToArrayPreprocessor()
+    simple_preprocessor = SimplePreprocessor(32, 32)
+    image_to_array_preprocessor = ImageToArrayPreprocessor()
+
     # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
-    dataset_loader = SimpleDatasetLoader(preprocessors=[preprocessor, iap])
+    dataset_loader = SimpleDatasetLoader(preprocessors=[simple_preprocessor,
+                                                        image_to_array_preprocessor])
     (data, labels) = dataset_loader.load(image_paths, verbose=500)
     data = data.astype("float") / 255.0
 
     # partition the data into training and testing splits using 75% of
     # the data for training and the remaining 25% for testing
-    (train_x, test_x, train_y, test_y) = train_test_split(data, labels,
+    (train_x, test_x, train_y, test_y) = train_test_split(data,
+                                                          labels,
                                                           test_size=0.25,
                                                           random_state=42)
     # convert the labels from integers to vectors
@@ -62,8 +65,12 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          batch_size=32, epochs=100, verbose=1)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          batch_size=32,
+                          epochs=100,
+                          verbose=1)
 
     # evaluate the network
     print("[INFO] evaluating network...")

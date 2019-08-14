@@ -38,16 +38,22 @@ def main():
     opt = SGD(lr=0.01)
     model = ShallowNet.build(width=32, height=32, depth=3, classes=10)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          batch_size=32, epochs=40, verbose=1)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          batch_size=32,
+                          epochs=40,
+                          verbose=1)
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=32)
     print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1), target_names=label_names))
+                                predictions.argmax(axis=1),
+                                target_names=label_names))
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")
