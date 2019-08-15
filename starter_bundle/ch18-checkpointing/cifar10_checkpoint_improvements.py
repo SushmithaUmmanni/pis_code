@@ -48,13 +48,21 @@ def main():
 
     # construct the callback to save only the *best* model to disk based on the validation loss
     fname = os.path.sep.join([args["weights"], "weights-{epoch:03d}-{val_loss:.4f}.hdf5"])
-    checkpoint = ModelCheckpoint(fname, monitor="val_loss", mode="min",
-                                 save_best_only=True, verbose=1)
+    checkpoint = ModelCheckpoint(fname,
+                                 monitor="val_loss",
+                                 mode="min",
+                                 save_best_only=True,
+                                 verbose=1)
     callbacks = [checkpoint]
     # train the network
     print("[INFO] training network...")
-    model.fit(train_x, train_y, validation_data=(test_x, test_y),
-              batch_size=64, epochs=40, callbacks=callbacks, verbose=2)
+    model.fit(train_x,
+              train_y,
+              validation_data=(test_x, test_y),
+              batch_size=64,
+              epochs=40,
+              callbacks=callbacks,
+              verbose=2)
 
 
 if __name__ == '__main__':

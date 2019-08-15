@@ -18,8 +18,7 @@ from pyimagesearch.nn.conv import ShallowNet
 def main():
     """Train ShallowNet on Cifar10 dataset.
     """
-    # load the training and testing data, then scale it into the
-    # range [0, 1]s
+    # load the training and testing data, then scale it into the range [0, 1]s
     print("[INFO] loading CIFAR-10 data...")
     ((train_x, train_y), (test_x, test_y)) = cifar10.load_data()
     train_x = train_x.astype("float") / 255.0
@@ -29,6 +28,7 @@ def main():
     label_binarizer = LabelBinarizer()
     train_y = label_binarizer.fit_transform(train_y)
     test_y = label_binarizer.transform(test_y)
+
     # initialize the label names for the CIFAR-10 dataset
     label_names = ["airplane", "automobile", "bird", "cat", "deer",
                    "dog", "frog", "horse", "ship", "truck"]

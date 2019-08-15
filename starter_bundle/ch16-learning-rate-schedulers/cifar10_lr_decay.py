@@ -63,16 +63,17 @@ def main():
                       help="path to the output loss/accuracy plot")
     args = vars(args.parse_args())
 
-    # load the training and testing data, then scale it into the
-    # range [0, 1]
+    # load the training and testing data, then scale it into the range [0, 1]
     print("[INFO] loading CIFAR-10 data...")
     ((train_x, train_y), (test_x, test_y)) = cifar10.load_data()
     train_x = train_x.astype("float") / 255.0
     test_x = test_x.astype("float") / 255.0
+
     # convert the labels from integers to vectors
     label_binarizer = LabelBinarizer()
     train_y = label_binarizer.fit_transform(train_y)
     test_y = label_binarizer.transform(test_y)
+
     # initialize the label names for the CIFAR-10 dataset
     label_names = ["airplane", "automobile", "bird", "cat", "deer",
                    "dog", "frog", "horse", "ship", "truck"]
@@ -83,15 +84,22 @@ def main():
     opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
     model = MiniVGGNet.build(width=32, height=32, depth=3, classes=10)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+
     # train the network
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          batch_size=64, epochs=40, callbacks=callbacks, verbose=1)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          batch_size=64,
+                          epochs=40,
+                          callbacks=callbacks,
+                          verbose=1)
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=64)
     print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1), target_names=label_names))
+                                predictions.argmax(axis=1),
+                                target_names=label_names))
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")

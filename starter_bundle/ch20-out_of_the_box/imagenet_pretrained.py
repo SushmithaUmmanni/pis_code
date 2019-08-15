@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 """Classifying Images with Pre-trained ImageNet CNNs.
 
-Let’s learn how to classify images with pre-trained Convolutional Neural Networks using the Keras
-library.
+Let’s learn how to classify images with pre-trained Convolutional Neural Networks
+using the Keras library.
 
 Example:
-    $ python knn.py --dataset ../datasets/animals
+    $ python imagenet_pretrained.py --image example_images/example_01.jpg --model vgg16
+    $ python imagenet_pretrained.py --image example_images/example_02.jpg --model vgg19
+    $ python imagenet_pretrained.py --image example_images/example_03.jpg --model inception
+    $ python imagenet_pretrained.py --image example_images/example_04.jpg --model xception
+    $ python imagenet_pretrained.py --image example_images/example_05.jpg --model resnet
 
 Attributes:
     image (str):
@@ -64,6 +68,7 @@ def main():
     if args["model"] in ("inception", "xception"):
         input_shape = (299, 299)
         preprocess = preprocess_input
+
     # load the network weights from disk (NOTE: if this is the first time you are running this
     # script for a given network, the weights will need to be downloaded first -- depending on
     # which network you are using, the weights can be 90-575MB, so be patient; the weights

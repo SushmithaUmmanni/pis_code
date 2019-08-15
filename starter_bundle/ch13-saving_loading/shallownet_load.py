@@ -36,24 +36,27 @@ def main():
 
     # initialize the class labels
     class_labels = ["cat", "dog", "panda"]
-    # grab the list of images in the dataset then randomly sample
-    # indexes into the image paths list
+
+    # grab the list of images in the dataset then randomly sample indexes into the image paths list
     print("[INFO] sampling images...")
     image_paths = np.array(list(paths.list_images(args["dataset"])))
     idxs = np.random.randint(0, len(image_paths), size=(10,))
     image_paths = image_paths[idxs]
+
     # initialize the image preprocessors
     simple_preprocessor = SimplePreprocessor(32, 32)
     image_to_array_preprocessor = ImageToArrayPreprocessor()
-    # load the dataset from disk then scale the raw pixel intensities
-    # to the range [0, 1]
+
+    # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
     dataset_loader = SimpleDatasetLoader(preprocessors=[simple_preprocessor,
                                                         image_to_array_preprocessor])
     (data, _) = dataset_loader.load(image_paths)
     data = data.astype("float") / 255.0
+
     # load the pre-trained network
     print("[INFO] loading pre-trained network...")
     model = load_model(args["model"])
+
     # make predictions on the images
     print("[INFO] predicting...")
     preds = model.predict(data, batch_size=32).argmax(axis=1)

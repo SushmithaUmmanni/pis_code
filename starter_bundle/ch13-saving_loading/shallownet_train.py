@@ -41,11 +41,12 @@ def main():
     # grab the list of images that we'll be describing
     print("[INFO] loading images...")
     image_paths = list(paths.list_images(args["dataset"]))
+
     # initialize the image preprocessors
     simple_preprocessor = SimplePreprocessor(32, 32)
     image_to_array_preprocessor = ImageToArrayPreprocessor()
-    # load the dataset from disk then scale the raw pixel intensities
-    # to the range [0, 1]
+
+    # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
     dataset_loader = SimpleDatasetLoader(preprocessors=[simple_preprocessor,
                                                         image_to_array_preprocessor])
     (data, labels) = dataset_loader.load(image_paths, verbose=500)
@@ -63,13 +64,20 @@ def main():
     opt = SGD(lr=0.005)
     model = ShallowNet.build(width=32, height=32, depth=3, classes=3)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          batch_size=32, epochs=100, verbose=1)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          batch_size=32,
+                          epochs=100,
+                          erbose=1)
+
     # save the network to disk
     print("[INFO] serializing network...")
     model.save(args["model"])
+
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=32)

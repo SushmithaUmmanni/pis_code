@@ -38,20 +38,28 @@ def main():
     label_binarizer = LabelBinarizer()
     train_y = label_binarizer.fit_transform(train_y)
     test_y = label_binarizer.transform(test_y)
+
     # initialize the optimizer and model
     print("[INFO] compiling model...")
     opt = SGD(lr=0.01, decay=0.01 / 40, momentum=0.9, nesterov=True)
     model = MiniVGGNet.build(width=32, height=32, depth=3, classes=10)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
-    # construct the callback to save only the *best* model to disk
-    # based on the validation loss
-    checkpoint = ModelCheckpoint(args["weights"], monitor="val_loss",
-                                 save_best_only=True, verbose=1)
+
+    # construct the callback to save only the *best* model to disk based on the validation loss
+    checkpoint = ModelCheckpoint(args["weights"],
+                                 monitor="val_loss",
+                                 save_best_only=True,
+                                 verbose=1)
     callbacks = [checkpoint]
     # train the network
     print("[INFO] training network...")
-    model.fit(train_x, train_y, validation_data=(test_x, test_y),
-              batch_size=64, epochs=40, callbacks=callbacks, verbose=2)
+    model.fit(train_x,
+              train_y,
+              validation_data=(test_x, test_y),
+              batch_size=64,
+              epochs=40,
+              callbacks=callbacks,
+              verbose=2)
 
 
 if __name__ == '__main__':
