@@ -12,17 +12,18 @@ Example:
                       --model output/checkpoints/epoch_35.hdf5 \
                       --start-epoch 35
 
-
 Attributes:
-    model (str):
-        the path to the output file where MiniGoogLeNet will be serialized after training
-    output (str):
-        path to our output dir where we will store any plots, logs, etc
+    checkpoints (str):
+        path to the output directory storing individual checkpoints for the DeeperGoogLeNet model
+    model (str, optional):
+        path to *specific* model checkpoint to load when restarting training
+    start-epoch (int, optional)
+        starting epoch number used when restarting from the model (default: 0)
 """
 import json
 import argparse
-import keras.backend as K
 import matplotlib
+import keras.backend as K
 from keras.models import load_model
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
@@ -34,13 +35,13 @@ from pyimagesearch.preprocessing import MeanPreprocessor
 from pyimagesearch.preprocessing import SimplePreprocessor
 from pyimagesearch.preprocessing import ImageToArrayPreprocessor
 from config import tiny_imagenet_config as config
-
 # set the matplotlib backend so figures can be saved in the background
 matplotlib.use("Agg")
 
 
 def main():
-
+    """Train DeeperGoogLeNet
+    """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
     args.add_argument("-c", "--checkpoints", required=True,
@@ -52,32 +53,46 @@ def main():
     args = vars(args.parse_args())
 
     # construct the training image generator for data augmentation
-    aug = ImageDataGenerator(rotation_range=18, zoom_range=0.15,
-    width_shift_range=0.2, height_shift_range=0.2, shear_range=0.15,
-    horizontal_flip=True, fill_mode="nearest")
+    augmentation = ImageDataGenerator(rotation_range=18,
+                                      zoom_range=0.15,
+                                      width_shift_range=0.2,
+                                      height_shift_range=0.2,
+                                      shear_range=0.15,
+                                      horizontal_flip=True,
+                                      fill_mode="nearest")
 
     # load the RGB means for the training set
     means = json.loads(open(config.DATASET_MEAN).read())
-
-
     # initialize the image preprocessors
-    sp = SimplePreprocessor(64, 64)
-    mp = MeanPreprocessor(means["R"], means["G"], means["B"])
-    iap = ImageToArrayPreprocessor()
+    simple_preprocessor = SimplePreprocessor(64, 64)
+    mean_preprocessor = MeanPreprocessor(means["R"], means["G"], means["B"])
+    image_to_array_preprocessor = ImageToArrayPreprocessor()
 
     # initialize the training and validation dataset generators
-    trainGen = HDF5DatasetGenerator(config.TRAIN_HDF5, 64, aug=aug,
-                                    preprocessors=[sp, mp, iap], classes=config.NUM_CLASSES)
-    valGen = HDF5DatasetGenerator(config.VAL_HDF5, 64,
-                                preprocessors=[sp, mp, iap], classes=config.NUM_CLASSES)
+    train_gen = HDF5DatasetGenerator(config.TRAIN_HDF5,
+                                     64,
+                                     augmentation=augmentation,
+                                     preprocessors=[simple_preprocessor,
+                                                    mean_preprocessor,
+                                                    image_to_array_preprocessor],
+                                     classes=config.NUM_CLASSES)
 
+    val_gen = HDF5DatasetGenerator(config.VAL_HDF5,
+                                   64,
+                                   preprocessors=[simple_preprocessor,
+                                                  mean_preprocessor,
+                                                  image_to_array_preprocessor],
+                                   classes=config.NUM_CLASSES)
 
-    # if there is no specific model checkpoint supplied, then initialize
-    # the network and compile the model
+    # if there is no specific model checkpoint supplied,
+    # then initialize the network and compile the model
     if args["model"] is None:
         print("[INFO] compiling model...")
-        model = DeeperGoogLeNet.build(width=64, height=64, depth=3,
-                                    classes=config.NUM_CLASSES, reg=0.0002)
+        model = DeeperGoogLeNet.build(width=64,
+                                      height=64,
+                                      depth=3,
+                                      classes=config.NUM_CLASSES,
+                                      reg=0.0002)
         opt = Adam(1e-3)
         model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
@@ -92,24 +107,23 @@ def main():
 
     # construct the set of callbacks
     callbacks = [
-    EpochCheckpoint(args["checkpoints"], every=5,
-                    startAt=args["start_epoch"]),
-    TrainingMonitor(config.FIG_PATH, jsonPath=config.JSON_PATH,
-                    startAt=args["start_epoch"])]
+        EpochCheckpoint(args["checkpoints"], every=5, start_at=args["start_epoch"]),
+        TrainingMonitor(config.FIG_PATH, json_path=config.JSON_PATH, start_at=args["start_epoch"])
+        ]
 
     # train the network
     model.fit_generator(
-        trainGen.generator(),
-        steps_per_epoch=trainGen.numImages // 64,
-        validation_data=valGen.generator(),
-        validation_steps=valGen.numImages // 64,
+        train_gen.generator(),
+        steps_per_epoch=train_gen.num_images // 64,
+        validation_data=val_gen.generator(),
+        validation_steps=val_gen.num_images // 64,
         epochs=10,
         max_queue_size=10,
         callbacks=callbacks, verbose=1)
 
     # close the databases
-    trainGen.close()
-    valGen.close()
+    train_gen.close()
+    val_gen.close()
 
 
 if __name__ == "__main__":
