@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Train DeeperGoogLeNet
+"""Train ResNet
 
 Example:
     $ python train.py --checkpoints output/checkpoints
@@ -43,7 +43,7 @@ sys.setrecursionlimit(5000)
 
 
 def main():
-    """Train DeeperGoogLeNet
+    """Train ResNet
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()

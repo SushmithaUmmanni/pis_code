@@ -6,7 +6,7 @@ Example:
 
 Attributes:
     model (str):
-        the path to the output file where MiniGoogLeNet will be serialized after training
+        the path to the output file where GoogLeNet will be serialized after training
     output (str):
         path to our output dir where we will store any plots, logs, etc
 """
@@ -50,7 +50,7 @@ def poly_decay(epoch):
 
 
 def main():
-    """Train MiniGoogLeNet on Cifar10 dataset
+    """Train GoogLeNet on Cifar10 dataset
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
