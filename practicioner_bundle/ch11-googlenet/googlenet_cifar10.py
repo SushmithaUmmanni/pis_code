@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Fine-tuning from Start to Finish.
+"""Training GoogLeNet on CIFAR-10
 
 Example:
     $ python googlenet_cifar10.py --output output --model output/minigooglenet_cifar10.hdf5

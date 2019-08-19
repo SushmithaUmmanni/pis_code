@@ -41,14 +41,15 @@ class EpochCheckpoint(Callback):
     def on_epoch_end(self, epoch, logs=None):
         """Serialize the weights for both the training and validation set to disk
 
-        todo: do we need logs?
-
+        This functions automatically receives parameters from Keras and requires
+        epoch and logs as parameters.
 
         Arguments:
-            epoch {int} -- [description]
+            epoch {int} -- Epoch number
 
         Keyword Arguments:
-            logs {[type]} -- [description] (default: {None})
+            logs {dict} -- training and validation loss + accuracy for the current epoch
+                           (default: {None})
         """
         # check to see if the model should be serialized to disk
         if (self.int_epoch + 1) % self.every == 0:

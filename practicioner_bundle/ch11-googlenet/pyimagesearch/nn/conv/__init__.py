@@ -6,6 +6,7 @@ from .lenet import LeNet
 from .fcheadnet import FCHeadNet
 from .minigooglenet import MiniGoogLeNet
 from .minivggnet import MiniVGGNet
+from .resnet import ResNet
 from .shallownet import ShallowNet
 
 
@@ -16,5 +17,6 @@ __all__ = [
     'LeNet',
     'MiniGoogLeNet',
     'MiniVGGNet',
+    'ResNet',
     'ShallowNet',
     ]

@@ -19,20 +19,19 @@ from keras.layers import concatenate
 from keras import backend as K
 
 
-# todo: type of padding | what type does it return? | input layer type
-
 class MiniGoogLeNet:
     """Implementation of MiniGoogLeNet architecture
     """
     @staticmethod
-    def conv_module(x, K, kX, kY, stride, chanel_dim, padding="same"):
+    def conv_module(x, filter_num, filter_x_size, filter_y_size,
+                    stride, chanel_dim, padding="same"):
         """Define conv layer
 
         Arguments:
-            x {[type]} -- input layer to the function
-            K {int} -- number of filters our CONV layer is going to learn
-            kX {int} -- x-size of each of the K filters that will be learned
-            kY {int} -- y-size of each of the K filters that will be learned
+            x {Tensor} -- input layer to the function
+            filter_num {int} -- number of filters our CONV layer is going to learn
+            filter_x_size {int} -- x-size of each of the filter_num filters that will be learned
+            filter_y_size {int} -- y-size of each of the filter_num filters that will be learned
             stride {int} -- stride of the CONV layer
             chanel_dim {int} -- channel dimension, derived from “channels last” or “channels first”
 
@@ -40,27 +39,27 @@ class MiniGoogLeNet:
             padding {str} -- type of padding to be applied to the CONV layer (default: {"same"})
 
         Returns:
-            keras model -- convolutional module
+            Tensor -- convolutional module
         """
         # define a CONV => BN => RELU pattern
-        x = Conv2D(K, (kX, kY), strides=stride, padding=padding)(x)
+        x = Conv2D(filter_num, (filter_x_size, filter_y_size), strides=stride, padding=padding)(x)
         x = BatchNormalization(axis=chanel_dim)(x)
         x = Activation("relu")(x)
         # return the block
         return x
 
     @staticmethod
-    def inception_module(x, numK1x1, numK3x3, chanel_dim):
+    def inception_module(x, numK1x1, numK3x3, chanel_dim):  # pylint: disable=invalid-name
         """Define inception module
 
         Arguments:
-            x {[type]} -- input layer
+            x {Tensor} -- input layer
             numK1x1 {int} -- number of 1x1 filters
             numK3x3 {int} -- number of 3x3 filters
             chanel_dim {int} -- channel dimension, derived from “channels last” or “channels first”
 
         Returns:
-            [type] -- inception module
+            Tensor -- inception module
         """
         # define two CONV modules, then concatenate across the channel dimension
         conv_1x1 = MiniGoogLeNet.conv_module(x, numK1x1, 1, 1, (1, 1), chanel_dim)
@@ -70,19 +69,20 @@ class MiniGoogLeNet:
         return x
 
     @staticmethod
-    def downsample_module(x, K, chanel_dim):
+    def downsample_module(x, filter_num, chanel_dim):
         """Define downsample module
 
         Arguments:
-            x {[type]} -- input layer
-            K {int} -- number of filters our CONV layer is going to learn
+            x {Tensor} -- input layer
+            filter_num {int} -- number of filters our CONV layer is going to learn
             chanel_dim {int} -- channel dimension, derived from “channels last” or “channels first”
 
         Returns:
-            [type] -- downsample module
+            Tensor -- downsample module
         """
         # define the CONV module and POOL, then concatenate across the channel dimensions
-        conv_3x3 = MiniGoogLeNet.conv_module(x, K, 3, 3, (2, 2), chanel_dim, padding="valid")
+        conv_3x3 = MiniGoogLeNet.conv_module(x, filter_num, 3, 3, (2, 2),
+                                             chanel_dim, padding="valid")
         pool = MaxPooling2D((3, 3), strides=(2, 2))(x)
         x = concatenate([conv_3x3, pool], axis=chanel_dim)
         # return the block
@@ -99,7 +99,7 @@ class MiniGoogLeNet:
             classes {int} -- [description]
 
         Returns:
-            [type] -- MiniGoogLeNet
+            obj -- MiniGoogLeNet model
         """
         # initialize the input shape to be "channels last" and the channels dimension itself
         input_shape = (height, width, depth)

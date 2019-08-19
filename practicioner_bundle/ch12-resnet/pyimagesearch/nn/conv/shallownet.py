@@ -13,7 +13,7 @@ class ShallowNet:
     """Implementation of ShallowNet architecture.
 
     Returns:
-        [obj] -- ShallowNet model
+        obj -- ShallowNet model
     """
     @staticmethod
     def build(width, height, depth, classes):
@@ -26,7 +26,7 @@ class ShallowNet:
             classes {int} -- The number class labels in the classification task.
 
         Returns:
-            [obj] -- ShallowNet model
+            obj -- ShallowNet model
         """
         # initialize the model along with the input shape to be "channels last"
         model = Sequential()

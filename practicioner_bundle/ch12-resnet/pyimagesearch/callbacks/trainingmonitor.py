@@ -3,11 +3,11 @@
 
 Attributes:
     fig_path (str):
-        The path to the output plot used to visualize loss and accuracy over time.
+        path to the output plot used to visualize loss and accuracy over time.
     json_path (str, optional):
-        The path used to serialize the loss and accuracy values as a JSON file.
+        path used to serialize the loss and accuracy values as a JSON file.
     start_at (int, optional):
-        The starting epoch that training is resumed at when using ctrl + c training.
+        starting epoch that training is resumed at when using ctrl + c training.
 """
 import os
 import json
@@ -48,8 +48,8 @@ class TrainingMonitor(BaseLogger):
         """Update all parameters in the logs
 
         Keyword Arguments:
-            logs {dict} -- training and validation loss + accuracy for the current epoch
-                           (default: {{}})
+            logs {dict} -- dictionary of hisotory logs
+                           (default: {None)
         """
         # if the JSON history path exists, load the training history
         if self.json_path is not None:
@@ -65,27 +65,31 @@ class TrainingMonitor(BaseLogger):
     def on_epoch_end(self, epoch, logs=None):
         """Serialize the loss and accuracy for both the training and validation set to disk
 
-        This functions is automatically supplied the parameters from Keras
+        This functions automatically receives parameters from Keras and requires
+        epoch and logs as parameters.
 
         Arguments:
             epoch {int} -- Epoch number
 
         Keyword Arguments:
             logs {dict} -- training and validation loss + accuracy for the current epoch
-                           (default: {{}})
+                           (default: {None})
         """
         if logs is None:
             logs = {}
+
         # loop over the logs and update the loss, accuracy, etc.for the entire training process
         for (key, value) in logs.items():
             log = self.history.get(key, [])
             log.append(float(value))
             self.history[key] = log
+
         # check to see if the training history should be serialized to file
         if self.json_path is not None:
             f = open(self.json_path, "w")
             f.write(json.dumps(self.history))
             f.close()
+
         # ensure at least two epochs have passed before plotting (epoch starts at zero)
         if len(self.history["loss"]) > 1:
             # plot the training loss and accuracy
@@ -100,6 +104,7 @@ class TrainingMonitor(BaseLogger):
             plt.xlabel("Epoch #")
             plt.ylabel("Loss/Accuracy")
             plt.legend()
+
             # save the figure
             plt.savefig(self.fig_path)
             plt.close()

@@ -57,32 +57,47 @@ def main():
     # scale the raw pixel intensities to the range [0, 1]
     data = np.array(data, dtype="float") / 255.0
     labels = np.array(labels)
+
     # convert the labels from integers to vectors
     label_encoder = LabelEncoder().fit(labels)
     labels = np_utils.to_categorical(label_encoder.transform(labels), 2)
+
     # account for skew in the labeled data
     class_totals = labels.sum(axis=0)
     class_weight = class_totals.max() / class_totals
+
     # partition the data into training and testing splits using 80% of
     # the data for training and the remaining 20% for testing
-    (train_x, test_x, train_y, test_y) = train_test_split(data, labels, test_size=0.20,
-                                                          stratify=labels, random_state=42)
+    (train_x, test_x, train_y, test_y) = train_test_split(data,
+                                                          labels,
+                                                          test_size=0.20,
+                                                          stratify=labels,
+                                                          random_state=42)
     # initialize the model
     print("[INFO] compiling model...")
     model = LeNet.build(width=28, height=28, depth=1, classes=2)
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          class_weight=class_weight, batch_size=64, epochs=15, verbose=1)
+    model_fit = model.fit(train_x,
+                          train_y,
+                          validation_data=(test_x, test_y),
+                          class_weight=class_weight,
+                          batch_size=64,
+                          epochs=15,
+                          verbose=1)
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=64)
     print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1), target_names=label_encoder.classes_))
+                                predictions.argmax(axis=1),
+                                target_names=label_encoder.classes_))
+
     # save the model to disk
     print("[INFO] serializing network...")
     model.save(args["model"])
+
     # plot the training + testing loss and accuracy
     plt.style.use("ggplot")
     plt.figure()
