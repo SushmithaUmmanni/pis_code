@@ -10,17 +10,17 @@ Attributes:
     confidende (float, default: 0.5):
         minimum probability to filter weak detections
 """
-from pyimagesearch.utils.simple_obj_det import image_pyramid
-from pyimagesearch.utils.simple_obj_det import sliding_window
-from pyimagesearch.utils.simple_obj_det import classify_batch
+import argparse
+import time
+import numpy as np
+import cv2
 from keras.applications import ResNet50
 from keras.preprocessing.image import img_to_array
 from keras.applications import imagenet_utils
 from imutils.object_detection import non_max_suppression
-import numpy as np
-import argparse
-import time
-import cv2
+from pyimagesearch.utils.simple_obj_det import image_pyramid
+from pyimagesearch.utils.simple_obj_det import sliding_window
+from pyimagesearch.utils.simple_obj_det import classify_batch
 
 # These are the width and height of our input --image. Our image is resized,
 # ignoring aspect ratio, to INPUT_SCALE prior to being fed through our neural network.
@@ -41,6 +41,8 @@ BATCH_SIZE = 64
 
 
 def main():
+    """Run simple object detection
+    """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
     args.add_argument("-i", "--image", required=True,
@@ -57,7 +59,6 @@ def main():
     labels = {}
     # load the input image from disk and grab its dimensions
     orig = cv2.imread(args["image"])
-    (h, w) = orig.shape[:2]
     # resize the input image to be a square
     resized = cv2.resize(orig, INPUT_SIZE, interpolation=cv2.INTER_CUBIC)
     # initialize the batch ROIs and (x, y)-coordinates
@@ -67,7 +68,7 @@ def main():
     print("[INFO] detecting objects...")
     start = time.time()
     # loop over the image pyramid
-    for image in image_pyramid(resized, scale=PYR_SCALE, minSize=ROI_SIZE):
+    for image in image_pyramid(resized, scale=PYR_SCALE, min_size=ROI_SIZE):
         # loop over the sliding window locations
         for (x, y, roi) in sliding_window(image, WIN_STEP, ROI_SIZE):
             # take the ROI and pre-process it so we can later classify the region with Keras
@@ -110,8 +111,8 @@ def main():
         clone = resized.copy()
         # loop over all bounding boxes for the label and draw them on the image
         for (box, _) in labels[k]:
-            (xA, yA, xB, yB) = box
-            cv2.rectangle(clone, (xA, yA), (xB, yB), (0, 255, 0), 2)
+            (x, y, w, h) = box
+            cv2.rectangle(clone, (x, y), (w, h), (0, 255, 0), 2)
 
         # show the image *without* apply non-maxima suppression
         cv2.imshow("Without NMS", clone)
@@ -123,8 +124,8 @@ def main():
         boxes = non_max_suppression(boxes, probability)
         # loop over the bounding boxes again, this time only drawing the
         # ones that were *not* suppressed
-        for (xA, yA, xB, yB) in boxes:
-            cv2.rectangle(clone, (xA, yA), (xB, yB), (0, 0, 255), 2)
+        for (x, y, w, h) in boxes:
+            cv2.rectangle(clone, (x, y), (w, h), (0, 0, 255), 2)
         # show the output image
         print("[INFO] {}: {}".format(k, len(boxes)))
         cv2.imshow("With NMS", clone)

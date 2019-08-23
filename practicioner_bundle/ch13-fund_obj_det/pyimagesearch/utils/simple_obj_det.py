@@ -47,37 +47,37 @@ def image_pyramid(image, scale=1.5, min_size=(224, 224)):
 
 def classify_batch(model, batch_rois, batch_locs, labels,
                    min_probability=0.5, top=10, dims=(224, 224)):
-    """[summary]
+    """Classify ROIs extracted from sliding window
 
     Arguments:
         model {obj} -- Keras model that we will be using for classification
-        batch_rois {[type]} -- NumPy array containing the batch of ROIs, which will be classified
-        batch_locs {[type]} -- [description]
-        labels {[type]} -- [description]
+        batch_rois {array} -- batch of ROIs, which will be classified
+        batch_locs {list} -- (x;y)-coordinates of each ROI in batchROIs
+        labels {dict} -- class labels dictionary
 
     Keyword Arguments:
-        min_probability {float} -- [description] (default: {0.5})
-        top {int} -- [description] (default: {10})
-        dims {tuple} -- [description] (default: {(224, 224)})
+        min_probability {float} -- minimum required probability for a classification
+                                   to be considered a valid detection (default: {0.5})
+        top {int} -- number of top-K predictions to be returned by the network (default: {10})
+        dims {tuple} -- Spatial dimensions of the bounding box (default: {(224, 224)})
     """
     # pass our batch ROIs through our network and decode the predictions
-    preds = model.predict(batch_rois)
-    P = imagenet_utils.decode_predictions(preds, top=top)
+    predictions_ = model.predict(batch_rois)
+    predictions = imagenet_utils.decode_predictions(predictions_, top=top)
     # loop over the decoded predictions
-    for i in range(0, len(P)):
-        for (_, label, prob) in P[i]:
-            # filter out weak detections by ensuring the
-            # predicted probability is greater than the minimum
-            # probability
+    for i, _ in enumerate(predictions):
+        for (_, label, prob) in predictions[i]:
+            # filter out weak detections by ensuring the predicted probability is greater
+            # than the minimum probability
             if prob > min_probability:
                 # grab the coordinates of the sliding window for
                 # the prediction and construct the bounding box
-                (pX, pY) = batch_locs[i]
-                box = (pX, pY, pX + dims[0], pY + dims[1])
+                (x, y) = batch_locs[i]
+                box = (x, y, x + dims[0], y + dims[1])
                 # grab the list of predictions for the label and
                 # add the bounding box + probability to the list
-                L = labels.get(label, [])
-                L.append((box, prob))
-                labels[label] = L
+                object_info = labels.get(label, [])
+                object_info.append((box, prob))
+                labels[label] = object_info
                 # return the labels dictionary
                 return labels
