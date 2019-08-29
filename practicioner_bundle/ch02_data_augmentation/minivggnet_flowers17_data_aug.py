@@ -12,14 +12,14 @@ Attributes:
 """
 import os
 import argparse
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from imutils import paths
+from keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import SGD
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from keras.preprocessing.image import ImageDataGenerator
-from keras.optimizers import SGD
 from pyimagesearch.preprocessing import ImageToArrayPreprocessor
 from pyimagesearch.preprocessing import AspectAwarePreprocessor
 from pyimagesearch.datasets import SimpleDatasetLoader
@@ -45,10 +45,11 @@ def main():
     # initialize the image preprocessors
     aspect_aware_preprocessor = AspectAwarePreprocessor(64, 64)
     image_to_array_preprocessor = ImageToArrayPreprocessor()
+
     # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
-    simple_dataset_loader = SimpleDatasetLoader(preprocessors=[aspect_aware_preprocessor,
-                                                               image_to_array_preprocessor])
-    (data, labels) = simple_dataset_loader.load(image_paths, verbose=500)
+    sdl = SimpleDatasetLoader(preprocessors=[aspect_aware_preprocessor,
+                                             image_to_array_preprocessor])
+    (data, labels) = sdl.load(image_paths, verbose=500)
     data = data.astype("float") / 255.0
 
     # partition the data into training and testing splits using 75% of
@@ -57,18 +58,20 @@ def main():
                                                           labels,
                                                           test_size=0.25,
                                                           random_state=42)
+
     # convert the labels from integers to vectors
     train_y = LabelBinarizer().fit_transform(train_y)
     test_y = LabelBinarizer().fit_transform(test_y)
 
     # construct the image generator for data augmentation
-    augmentation = ImageDataGenerator(rotation_range=30,
-                                      width_shift_range=0.1,
-                                      height_shift_range=0.1,
-                                      shear_range=0.2,
-                                      zoom_range=0.2,
-                                      horizontal_flip=True,
-                                      fill_mode="nearest")
+    aug = ImageDataGenerator(rotation_range=30,
+                             width_shift_range=0.1,
+                             height_shift_range=0.1,
+                             shear_range=0.2,
+                             zoom_range=0.2,
+                             horizontal_flip=True,
+                             fill_mode="nearest")
+
     # initialize the optimizer and model
     print("[INFO] compiling model...")
     opt = SGD(lr=0.05)
@@ -77,7 +80,7 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit_generator(augmentation.flow(train_x, train_y, batch_size=32),
+    model_fit = model.fit_generator(aug.flow(train_x, train_y, batch_size=32),
                                     validation_data=(test_x, test_y),
                                     steps_per_epoch=len(train_x) // 32,
                                     epochs=100,
@@ -89,6 +92,7 @@ def main():
     print(classification_report(test_y.argmax(axis=1),
                                 predictions.argmax(axis=1),
                                 target_names=class_names))
+
     # plot the training loss and accuracy
     plt.style.use("ggplot")
     plt.figure()
