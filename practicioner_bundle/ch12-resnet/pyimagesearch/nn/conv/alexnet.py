@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Implementation of AlexNet architecture.
-
 """
 from keras.models import Sequential
 from keras.layers.normalization import BatchNormalization
