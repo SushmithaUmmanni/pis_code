@@ -3,12 +3,13 @@
 """
 import mxnet as mx
 
+
 class MxAlexNet:
     """AlexNet architecture
     """
     @staticmethod
     def build(classes):
-        """Build AlexNet
+        """Build AlexNet with MXNet
 
         Arguments:
             classes {int} -- Number of classes

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Train AlexNet with MXNet
+"""Train VGGNet with MXNet
 
 This script can adapted to any other network architecture. You just need to change the following:
 1. Change imports to properly set the configuration file and the network architecture.
@@ -25,8 +25,8 @@ import argparse
 import json
 import logging
 import mxnet as mx
-from config import imagenet_alexnet_config as config
-from pyimagesearch.nn.mxconv import MxAlexNet
+from config import imagenet_vggnet_config as config
+from pyimagesearch.nn.mxconv import MxVGGNet
 
 
 def main():
@@ -90,7 +90,7 @@ def main():
     if args["start_epoch"] <= 0:
         # build the LeNet architecture
         print("[INFO] building network...")
-        model = MxAlexNet.build(config.NUM_CLASSES)
+        model = MxVGGNet.build(config.NUM_CLASSES)
         # otherwise, a specific checkpoint was supplied
     else:
         # load the checkpoint from disk
@@ -103,18 +103,19 @@ def main():
 
     # compile the model
     model = mx.model.FeedForward(
-        ctx=[mx.gpu(1), mx.gpu(2), mx.gpu(3)],
+        # ctx=[mx.gpu(i) for i in range(0, config.NUM_DEVICES)],
+        ctx=[mx.gpu(0)],
         symbol=model,
-        initializer=mx.initializer.Xavier(),
+        initializer=mx.initializer.MSRAPrelu(),
         arg_params=arg_params,
         aux_params=aux_params,
         optimizer=opt,
-        num_epoch=90,
+        num_epoch=80,
         begin_epoch=args["start_epoch"])
 
     # initialize the callbacks and evaluation metrics
-    batch_end_callbacks = [mx.callback.Speedometer(batch_size, 500)]
-    epoch_end_callback = [mx.callback.do_checkpoint(checkpoints_path)]
+    batch_end_callbacks = [mx.callback.Speedometer(batch_size, 250)]
+    epoch_end_callbacks = [mx.callback.do_checkpoint(checkpoints_path)]
     metrics = [mx.metric.Accuracy(), mx.metric.TopKAccuracy(top_k=5), mx.metric.CrossEntropy()]
 
     # train the network
@@ -124,7 +125,7 @@ def main():
         eval_data=val_iter,
         eval_metric=metrics,
         batch_end_callback=batch_end_callbacks,
-        epoch_end_callback=epoch_end_callback)
+        epoch_end_callback=epoch_end_callbacks)
 
 
 if __name__ == "__main__":
