@@ -9,8 +9,8 @@ This script can adapted to any other network architecture. You just need to chan
 4. Change the name of the model being initialized
 
 Examples:
-    $ python train_alexnet.py --checkpoints checkpoints --prefix alexnet
-    $ python train_alexnet.py - -checkpoints checkpoints --prefix alexnet --start-epoch 50
+    $ python train_vggnet.py --checkpoints checkpoints --prefix vggnet
+    $ python train_vggnet.py --checkpoints checkpoints --prefix vggnet --start-epoch 50
 
 Attributes:
     checkpoints (int):

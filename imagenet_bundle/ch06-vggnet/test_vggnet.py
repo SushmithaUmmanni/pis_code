@@ -2,7 +2,7 @@
 """Evaluate AlexNet with MXNet
 
 Examples:
-    $ python test_alexnet.py --checkpoints checkpoints --prefix alexnet --epoch 100
+    $ python test_vggnet.py --checkpoints checkpoints --prefix vggnet --epoch 80
 
 Attributes:
     checkpoints (int):
