@@ -27,7 +27,7 @@ class ResNet:
         bn_eps and bn_momentum are used to overwrite default Keras parameters
 
         Arguments:
-            data {[type]} -- input to the residual module
+            data {tensor} -- input to the residual module
             filter_num {int} -- number of filters that will be learned by
                                 the final CONV in the bottleneck
             stride {int} -- stride of the convolution
