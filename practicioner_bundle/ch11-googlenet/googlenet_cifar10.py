@@ -54,10 +54,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-m", "--model", required=True,
-                      help="path to output model")
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output directory (logs, plots, etc.)")
+    args.add_argument("-m", "--model", required=True, help="path to output model")
+    args.add_argument("-o", "--output", required=True, help="path to output directory (logs, plots, etc.)")
     args = vars(args.parse_args())
 
     # load the training and testing data, converting the images from integers to floats
@@ -77,10 +75,9 @@ def main():
     test_y = label_binarizer.transform(test_y)
 
     # construct the image generator for data augmentation
-    augmentation = ImageDataGenerator(width_shift_range=0.1,
-                                      height_shift_range=0.1,
-                                      horizontal_flip=True,
-                                      fill_mode="nearest")
+    augmentation = ImageDataGenerator(
+        width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True, fill_mode="nearest"
+    )
 
     # construct the set of callbacks
     fig_path = os.path.sep.join([args["output"], "{}.png".format(os.getpid())])
@@ -95,12 +92,14 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model.fit_generator(augmentation.flow(train_x, train_y, batch_size=64),
-                        validation_data=(test_x, test_y),
-                        steps_per_epoch=len(train_x) // 64,
-                        epochs=NUM_EPOCHS,
-                        callbacks=callbacks,
-                        verbose=1)
+    model.fit_generator(
+        augmentation.flow(train_x, train_y, batch_size=64),
+        validation_data=(test_x, test_y),
+        steps_per_epoch=len(train_x) // 64,
+        epochs=NUM_EPOCHS,
+        callbacks=callbacks,
+        verbose=1,
+    )
 
     # save the network to disk
     print("[INFO] serializing network...")

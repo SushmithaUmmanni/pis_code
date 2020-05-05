@@ -8,9 +8,9 @@ from .alexnet import AlexNet
 
 
 __all__ = [
-    'ShallowNet',
-    'LeNet',
-    'MiniVGGNet',
-    'FCHeadNet',
-    'AlexNet',
-    ]
+    "ShallowNet",
+    "LeNet",
+    "MiniVGGNet",
+    "FCHeadNet",
+    "AlexNet",
+]

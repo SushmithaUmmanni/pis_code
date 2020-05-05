@@ -27,8 +27,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-m", "--models", required=True,
-                      help="path to models directory")
+    args.add_argument("-m", "--models", required=True, help="path to models directory")
     args = vars(args.parse_args())
 
     # load the testing data, then scale it into the range [0, 1]
@@ -36,8 +35,7 @@ def main():
     test_x = test_x.astype("float") / 255.0
 
     # initialize the label names for the CIFAR-10 dataset
-    label_names = ["airplane", "automobile", "bird", "cat", "deer",
-                   "dog", "frog", "horse", "ship", "truck"]
+    label_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
     # convert the labels from integers to vectors
     label_binarizer = LabelBinarizer()
     test_y = label_binarizer.fit_transform(test_y)
@@ -63,9 +61,7 @@ def main():
 
     # average the probabilities across all model predictions, then show a classification report
     predictions = np.average(predictions, axis=0)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=label_names))
+    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_names))
 
 
 if __name__ == "__main__":

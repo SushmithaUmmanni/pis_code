@@ -1,0 +1,142 @@
+########################################################################################################################
+# Install guide
+########################################################################################################################
+
+# # install for commit and push together
+# pre-commit pre-commit install && pre-commit install -t pre-push
+# # Don't foreget to update regularly:
+# pre-commit autoupdate
+
+########################################################################################################################
+# pre-commit summary
+########################################################################################################################
+
+# seed-isort-config
+# isort
+# pydocstyle
+# black
+# blacken-docs
+# flake8
+# end-of-file-fixer
+# trailing-whitespace
+# check-added-large-files
+# check-merge-conflict
+# check-yaml
+# name-tests-test
+
+# bandit [push]
+# nb-ensure-clean [push]
+# mypy [push]
+# run tests [push]
+# sphinx - html [push]
+# sphinx - coverage [push]
+
+########################################################################################################################
+# Commit
+########################################################################################################################
+
+fail_fast: false  # if true, pre-commit will abort after first error
+repos:
+-   repo: https://github.com/asottile/seed-isort-config
+    rev: v1.9.3
+    hooks:
+    -   id: seed-isort-config
+        description: extended 'isort' configuration - has to be placed before 'isort'
+        args: [--exclude=notebooks]
+-   repo: https://github.com/pre-commit/mirrors-isort
+    rev: v4.3.21
+    hooks:
+    -   id: isort
+        description: python import sorter
+-   repo: https://github.com/PyCQA/pydocstyle
+    rev: 4.0.1
+    hooks:
+    -   id: pydocstyle
+        description: static analysis tool for checking compliance with Python docstring conventions
+-   repo: https://github.com/psf/black
+    rev: 19.3b0
+    hooks:
+    -   id: black
+        description: the uncompromising Python code formatter
+        args: [--line-length=120, --quiet]
+-   repo: https://github.com/asottile/blacken-docs
+    rev: v1.3.0
+    hooks:
+    -   id: blacken-docs
+        description: .md and .rst formatter based on 'black' - specify black version in additional_dependencies!
+        args: [--line-length=120]
+        additional_dependencies: [black==19.3b0]
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: flake8
+        description: Tool for style guide enforcement - wrapper around PyFlakes, pycodestyle and McCabe script.
+        args: [--max-line-length=120, --config=tox.ini]
+    -   id: end-of-file-fixer
+        description: Ensures that a file is either empty, or ends with one newline.
+    -   id: trailing-whitespace
+        description: This hook trims trailing whitespace.
+    -   id: check-added-large-files
+        description: Prevent giant files from being committed.
+        args: [--maxkb=10000]
+    -   id: check-merge-conflict
+        description: Check for files that contain merge conflict strings.
+    -   id: check-yaml
+        description: This hook checks yaml files for parseable syntax.
+    -   id: name-tests-test
+        description: This verifies that test files are named correctly.
+
+
+########################################################################################################################
+# Push
+########################################################################################################################
+
+-   repo: https://github.com/PyCQA/bandit
+    rev: 1.6.2
+    hooks:
+    -   id: bandit
+        description: Tool for finding common security issues in Python code.
+        args: [-l, --recursive, -x, tests]
+        files: .py$
+        stages: [push]
+- repo: https://gitlab.com/iamlikeme/nbhooks
+  rev: 1.0.0
+  hooks:
+    -   id: nb-ensure-clean
+        description: Ensures that committed Jupyter notebooks contain no outputs.
+        args: [--meta, ExecuteTime]  # Optional blacklist of metadata keys (you can use regex)
+        stages: [push]
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.730
+    hooks:
+    -   id: mypy
+        description: Static code checker
+        args: [--no-strict-optional, --ignore-missing-imports]
+        stages: [push]
+-   repo: local
+    hooks:
+    -   id: tests
+        description: User-defined hook for running python tests at every push.
+        name: run tests
+        entry: pytest -v
+        language: system
+        types: [python]
+        stages: [push]
+-   repo: local
+    hooks:
+    -   id: sphinx-documentation
+        description: Generate automatic documentation with sphinx.
+        name: build documentation
+        entry: sphinx-build -b html docs/source/ docs/build/
+        language: system
+        types: [python]
+        stages: [push]
+-   repo: local
+    hooks:
+    -   id: sphinx-coverage
+        description: Generate docstring coverage with sphinx.
+        name: generate coverage
+        entry: sphinx-build -v -b coverage docs/source/ docs/build/coverage/
+        language: system
+        types: [python]
+        stages: [push]

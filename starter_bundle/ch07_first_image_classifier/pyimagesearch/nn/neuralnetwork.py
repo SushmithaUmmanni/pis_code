@@ -17,6 +17,7 @@ import numpy as np
 class NeuralNetwork:
     """Implementation of backpropagation algorithm.
     """
+
     def __init__(self, layers, alpha=0.1):
         """Initialize the neural network.
 
@@ -50,8 +51,7 @@ class NeuralNetwork:
         Returns:
             str: network architecture
         """
-        return "NeuralNetwork: {}".format(
-            "-".join(str(l) for l in self.layers))
+        return "NeuralNetwork: {}".format("-".join(str(l) for l in self.layers))
 
     def sigmoid(self, x):
         """Commpute the sigmoid activation value for a given input.
@@ -101,8 +101,7 @@ class NeuralNetwork:
                 # check to see if we should display a training update
                 if epoch == 0 or (epoch + 1) % display_update == 0:
                     loss = self.calculate_loss(X, y)
-                    print("[INFO] epoch={}, loss={:.7f}".format(
-                        epoch + 1, loss))
+                    print("[INFO] epoch={}, loss={:.7f}".format(epoch + 1, loss))
 
     def fit_partial(self, x, y):
         """Implement backpropagation algorithm.

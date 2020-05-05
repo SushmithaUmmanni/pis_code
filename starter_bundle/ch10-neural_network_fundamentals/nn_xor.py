@@ -25,9 +25,8 @@ def main():
         # to our console
         pred = network.predict(value)[0][0]
         step = 1 if pred > 0.5 else 0
-        print("[INFO] data={}, ground-truth={}, pred={:.4f}, step={}".format(
-            value, target[0], pred, step))
+        print("[INFO] data={}, ground-truth={}, pred={:.4f}, step={}".format(value, target[0], pred, step))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

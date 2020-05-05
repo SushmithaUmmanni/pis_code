@@ -33,6 +33,7 @@ from sklearn.preprocessing import LabelBinarizer
 from pyimagesearch.callbacks import TrainingMonitor
 from pyimagesearch.callbacks import EpochCheckpoint
 from pyimagesearch.nn.conv import ResNet
+
 # set the matplotlib backend so figures can be saved in the background
 matplotlib.use("Agg")
 # set a high recursion limit so Theano doesn't complain
@@ -44,12 +45,9 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-c", "--checkpoints", required=True,
-                      help="path to output checkpoint directory")
-    args.add_argument("-m", "--model", type=str,
-                      help="path to *specific* model checkpoint to load")
-    args.add_argument("-s", "--start-epoch", type=int, default=0,
-                      help="epoch to restart training at")
+    args.add_argument("-c", "--checkpoints", required=True, help="path to output checkpoint directory")
+    args.add_argument("-m", "--model", type=str, help="path to *specific* model checkpoint to load")
+    args.add_argument("-s", "--start-epoch", type=int, default=0, help="epoch to restart training at")
     args = vars(args.parse_args())
 
     # load the training and testing data, converting the images from integers to floats
@@ -69,10 +67,7 @@ def main():
     test_y = label_binarizer.transform(test_y)
 
     # construct the image generator for data augmentation
-    aug = ImageDataGenerator(width_shift_range=0.1,
-                             height_shift_range=0.1,
-                             horizontal_flip=True,
-                             fill_mode="nearest")
+    aug = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True, fill_mode="nearest")
 
     # if there is no specific model checkpoint supplied, then initialize
     # the network (ResNet-56) and compile the model
@@ -92,19 +87,22 @@ def main():
 
     # construct the set of callbacks
     callbacks = [
-        EpochCheckpoint(args["checkpoints"], every=5,
-                        start_at=args["start_epoch"]),
-        TrainingMonitor("output/resnet56_cifar10.png",
-                        json_path="output/resnet56_cifar10.json",
-                        start_at=args["start_epoch"])]
+        EpochCheckpoint(args["checkpoints"], every=5, start_at=args["start_epoch"]),
+        TrainingMonitor(
+            "output/resnet56_cifar10.png", json_path="output/resnet56_cifar10.json", start_at=args["start_epoch"]
+        ),
+    ]
 
     # train the network
     print("[INFO] training network...")
     model.fit_generator(
         aug.flow(train_x, train_y, batch_size=128),
         validation_data=(test_x, test_y),
-        steps_per_epoch=len(train_x) // 128, epochs=100,
-        callbacks=callbacks, verbose=1)
+        steps_per_epoch=len(train_x) // 128,
+        epochs=100,
+        callbacks=callbacks,
+        verbose=1,
+    )
 
 
 if __name__ == "__main__":

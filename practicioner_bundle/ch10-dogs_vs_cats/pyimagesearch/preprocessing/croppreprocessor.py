@@ -21,6 +21,7 @@ import cv2
 class CropPreprocessor:
     """Run the preprocessor
     """
+
     def __init__(self, width, height, horizontal_flip=True, inter=cv2.INTER_AREA):
         """Initialize the preprocessor
 
@@ -57,7 +58,8 @@ class CropPreprocessor:
             [0, 0, self.target_width, self.target_height],
             [w - self.target_width, 0, w, self.target_height],
             [w - self.target_width, h - self.target_height, w, h],
-            [0, h - self.target_height, self.target_width, h]]
+            [0, h - self.target_height, self.target_width, h],
+        ]
         # compute the center crop of the image as well
         dW = int(0.5 * (w - self.target_width))
         dH = int(0.5 * (h - self.target_height))
@@ -67,9 +69,7 @@ class CropPreprocessor:
         # and resize each of them to a fixed size
         for (start_x, start_y, end_x, end_y) in coords:
             crop = image[start_y:end_y, start_x:end_x]
-            crop = cv2.resize(crop,
-                              (self.target_width, self.target_height),
-                              interpolation=self.interpolation)
+            crop = cv2.resize(crop, (self.target_width, self.target_height), interpolation=self.interpolation)
             crops.append(crop)
         # check to see if the horizontal flips should be taken
         if self.horizontal_flip:

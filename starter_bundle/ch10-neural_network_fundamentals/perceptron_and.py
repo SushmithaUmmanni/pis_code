@@ -26,9 +26,8 @@ def main():
     for (value, target) in zip(X, y):
         # make a prediction on the data point and display the result to our console
         pred = perceptron.predict(value)
-        print("[INFO] data={}, ground-truth={}, pred={}".format(
-            value, target[0], pred))
+        print("[INFO] data={}, ground-truth={}, pred={}".format(value, target[0], pred))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

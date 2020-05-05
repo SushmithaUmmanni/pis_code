@@ -16,6 +16,7 @@ class LeNet:
     Returns:
         [obj] -- LeNet model
     """
+
     @staticmethod
     def build(width, height, depth, classes):
         """Build LeNet model

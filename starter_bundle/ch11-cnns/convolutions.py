@@ -42,7 +42,7 @@ def convolve(image, kernel):
         for x_pos in np.arange(pad, image_width + pad):
             # extract the ROI of the image by extracting the *center*
             # region of the current (x, y)-coordinates dimensions
-            roi = image[y_pos - pad:y_pos + pad + 1, x_pos - pad:x_pos + pad + 1]
+            roi = image[y_pos - pad : y_pos + pad + 1, x_pos - pad : x_pos + pad + 1]
             # perform the actual convolution by taking the element-wise multiplication
             # between the ROI and the kernel, then summing the matrix
             conv_value = (roi * kernel).sum()
@@ -61,8 +61,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--image", required=True,
-                      help="path to the input image")
+    args.add_argument("-i", "--image", required=True, help="path to the input image")
     args = vars(args.parse_args())
 
     # construct average blurring kernels used to smooth an image
@@ -70,33 +69,18 @@ def main():
     large_blur = np.ones((21, 21), dtype="float") * (1.0 / (21 * 21))
 
     # construct a sharpening filter
-    sharpen = np.array((
-        [0, -1, 0],
-        [-1, 5, -1],
-        [0, -1, 0]), dtype="int")
+    sharpen = np.array(([0, -1, 0], [-1, 5, -1], [0, -1, 0]), dtype="int")
 
     # construct the Laplacian kernel used to detect edge-like regions of an image
-    laplacian = np.array((
-        [0, 1, 0],
-        [1, -4, 1],
-        [0, 1, 0]), dtype="int")
+    laplacian = np.array(([0, 1, 0], [1, -4, 1], [0, 1, 0]), dtype="int")
 
     # construct the Sobel x-axis kernel
-    sobel_x = np.array((
-        [-1, 0, 1],
-        [-2, 0, 2],
-        [-1, 0, 1]), dtype="int")
+    sobel_x = np.array(([-1, 0, 1], [-2, 0, 2], [-1, 0, 1]), dtype="int")
     # construct the Sobel y-axis kernel
-    sobel_y = np.array((
-        [-1, -2, -1],
-        [0, 0, 0],
-        [1, 2, 1]), dtype="int")
+    sobel_y = np.array(([-1, -2, -1], [0, 0, 0], [1, 2, 1]), dtype="int")
 
     # construct an emboss kernel
-    emboss = np.array((
-        [-2, -1, 0],
-        [-1, 1, 1],
-        [0, 1, 2]), dtype="int")
+    emboss = np.array(([-2, -1, 0], [-1, 1, 1], [0, 1, 2]), dtype="int")
 
     # construct the kernel bank, a list of kernels we're going to apply using
     # both our custom `convolve` function and OpenCV's `filter2D` function
@@ -107,7 +91,8 @@ def main():
         ("laplacian", laplacian),
         ("sobel_x", sobel_x),
         ("sobel_y", sobel_y),
-        ("emboss", emboss))
+        ("emboss", emboss),
+    )
 
     # load the input image and convert it to grayscale
     image = cv2.imread(args["image"])
@@ -127,5 +112,5 @@ def main():
         cv2.destroyAllWindows()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

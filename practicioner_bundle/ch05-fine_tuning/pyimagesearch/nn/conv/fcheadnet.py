@@ -23,6 +23,7 @@ class FCHeadNet:
     Returns:
         [type] -- network model with a
     """
+
     @staticmethod
     def build(baseModel, classes, D):
         """[summary]

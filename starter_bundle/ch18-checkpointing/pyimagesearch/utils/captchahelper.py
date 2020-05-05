@@ -28,8 +28,7 @@ def preprocess(image, width, height):
     pad_width = int((width - image.shape[1]) / 2.0)
     pad_height = int((height - image.shape[0]) / 2.0)
     # pad the image then apply one more resizing to handle any rounding issues
-    image = cv2.copyMakeBorder(image, pad_height, pad_height, pad_width, pad_width,
-                               cv2.BORDER_REPLICATE)
+    image = cv2.copyMakeBorder(image, pad_height, pad_height, pad_width, pad_width, cv2.BORDER_REPLICATE)
     image = cv2.resize(image, (width, height))
     # return the pre-processed image
     return image

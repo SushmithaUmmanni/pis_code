@@ -15,6 +15,7 @@ class ShallowNet:
     Returns:
         [obj] -- ShallowNet model
     """
+
     @staticmethod
     def build(width, height, depth, classes):
         """Build ShallowNet model

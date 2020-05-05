@@ -36,14 +36,12 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--dataset", required=True,
-                      help="path to input dataset")
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output HDF5 file")
-    args.add_argument("-b", "--batch-size", type=int, default=16,
-                      help="batch size of images to be passed through network")
-    args.add_argument("-s", "--buffer-size", type=int, default=1000,
-                      help="size of feature extraction buffer")
+    args.add_argument("-d", "--dataset", required=True, help="path to input dataset")
+    args.add_argument("-o", "--output", required=True, help="path to output HDF5 file")
+    args.add_argument(
+        "-b", "--batch-size", type=int, default=16, help="batch size of images to be passed through network"
+    )
+    args.add_argument("-s", "--buffer-size", type=int, default=1000, help="size of feature extraction buffer")
     args = vars(args.parse_args())
 
     # store the batch size in a convenience variable
@@ -65,15 +63,13 @@ def main():
     model = ResNet50(weights="imagenet", include_top=False)
 
     # initialize the HDF5 dataset writer, then store the class label names in the dataset
-    dataset = HDF5DatasetWriter((len(image_paths), 100352),
-                                args["output"],
-                                data_key="features",
-                                buffer_size=args["buffer_size"])
+    dataset = HDF5DatasetWriter(
+        (len(image_paths), 100352), args["output"], data_key="features", buffer_size=args["buffer_size"]
+    )
     dataset.store_class_labels(label_encoder.classes_)
 
     # initialize the progress bar
-    widgets = ["Extracting Features: ", progressbar.Percentage(), " ",
-               progressbar.Bar(), " ", progressbar.ETA()]
+    widgets = ["Extracting Features: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]
     pbar = progressbar.ProgressBar(maxval=len(image_paths), widgets=widgets).start()
 
     # loop over the images in batches
@@ -81,8 +77,8 @@ def main():
         # extract the batch of images and labels, then initialize the
         # list of actual images that will be passed through the network
         # for feature extraction
-        batch_paths = image_paths[i:i + batch_size]
-        batch_labels = labels[i:i + batch_size]
+        batch_paths = image_paths[i : i + batch_size]
+        batch_labels = labels[i : i + batch_size]
         batch_images = []
         # loop over the images and labels in the current batch
         for (_, image_path) in enumerate(batch_paths):

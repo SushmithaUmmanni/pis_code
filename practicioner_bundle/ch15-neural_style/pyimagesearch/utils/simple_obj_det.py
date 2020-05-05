@@ -17,7 +17,7 @@ def sliding_window(image, step, roi_size):
     for y in range(0, image.shape[0] - roi_size[1], step):
         for x in range(0, image.shape[1] - roi_size[0], step):
             # yield the current window
-            yield (x, y, image[y:y + roi_size[1], x:x + roi_size[0]])
+            yield (x, y, image[y : y + roi_size[1], x : x + roi_size[0]])
 
 
 def image_pyramid(image, scale=1.5, min_size=(224, 224)):
@@ -45,8 +45,7 @@ def image_pyramid(image, scale=1.5, min_size=(224, 224)):
         yield image
 
 
-def classify_batch(model, batch_rois, batch_locs, labels,
-                   min_probability=0.5, top=10, dims=(224, 224)):
+def classify_batch(model, batch_rois, batch_locs, labels, min_probability=0.5, top=10, dims=(224, 224)):
     """Classify ROIs extracted from sliding window
 
     Arguments:

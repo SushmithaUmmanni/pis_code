@@ -3,4 +3,6 @@
 from .captchahelper import preprocess
 
 
-__all__ = ['preprocess', ]
+__all__ = [
+    "preprocess",
+]

@@ -20,6 +20,7 @@ class SimplePreprocessor:
     Returns:
         array: resized image
     """
+
     def __init__(self, width, height, interpolation=cv2.INTER_AREA):
         """Initialize preprocessor
 

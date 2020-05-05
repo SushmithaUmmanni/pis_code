@@ -21,6 +21,7 @@ from keras.layers.core import Dense
 class FCHeadNet:
     """Replace the head of a pre-trained CNN with a custom head
     """
+
     @staticmethod
     def build(base_model, classes, num_nodes):
         """Build the model

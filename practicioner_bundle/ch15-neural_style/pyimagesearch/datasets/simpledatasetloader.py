@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
-"""Image loader.
-
-Attributes:
-    preprocessors (list, optional):
-        A list of image preprocessors that can be sequentially applied to a given input image
-"""
+"""Image loader."""
 import os
 import cv2
 import numpy as np
 
 
 class SimpleDatasetLoader:
-    """Initialize the image loader.
-
-    Returns:
-        tuple -- returns a tuple of the data and labels
     """
+    Initialize the image loader.
+
+    Attributes:
+        preprocessors (list): List of image preprocessors that can be sequentially applied to
+                              a given input image.
+    """
+
     def __init__(self, preprocessors=None):
+        """
+        Initialize the simple dataset loader.
+
+        Args:
+            preprocessors (list, optional): List of image preprocessors that can be sequentially
+                                  applied to a given input image.
+        """
         # specify the image preprocessors in a list. Each preprocessor will be a separate module
         # store the image preprocessor
         self.preprocessors = preprocessors
@@ -25,17 +30,12 @@ class SimpleDatasetLoader:
             self.preprocessors = []
 
     def load(self, image_paths, verbose=-1):
-        """[summary]
+        """
+        Load images and labels.
 
-        Arguments:
-            image_paths {list]} -- Paths to the images in our dataset residing on disk
-
-        Keyword Arguments:
-            verbose {int} -- “verbosity level” can be used to print updates to a console
-                             (default: {-1})
-
-        Returns:
-            tuple -- tuple of the data and labels
+        Args:
+            image_paths (list): Paths to the images in our dataset residing on disk.
+            verbose (int, optional): verbosity level can be used to print updates to a console.
         """
         # initialize the list of features and labels
         data = []

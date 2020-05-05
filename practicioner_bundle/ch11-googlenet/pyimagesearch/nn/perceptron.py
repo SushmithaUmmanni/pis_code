@@ -13,6 +13,7 @@ import numpy as np
 class Perceptron:
     """Implementation of the perceptron algorithm.
     """
+
     def __init__(self, N, alpha=0.1):
         """Initialize perceptron object.
 

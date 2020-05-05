@@ -26,10 +26,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--input", required=True,
-                      help="path to input directory of images")
-    args.add_argument("-a", "--annot", required=True,
-                      help="path to output directory of annotations")
+    args.add_argument("-i", "--input", required=True, help="path to input directory of images")
+    args.add_argument("-a", "--annot", required=True, help="path to output directory of annotations")
     args = vars(args.parse_args())
 
     # grab the image paths then initialize the dictionary of character counts
@@ -56,7 +54,7 @@ def main():
             for contour in cnts:
                 # compute the bounding box for the contour then extract the digit
                 (x, y, w, h) = cv2.boundingRect(contour)
-                roi = gray[y - 5:y + h + 5, x - 5:x + w + 5]
+                roi = gray[y - 5 : y + h + 5, x - 5 : x + w + 5]
                 # display the character, making it large enough for us to see,
                 # then wait for a keypress
                 cv2.imshow("ROI", imutils.resize(roi, width=28))
@@ -87,5 +85,5 @@ def main():
             print("[INFO] skipping image...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

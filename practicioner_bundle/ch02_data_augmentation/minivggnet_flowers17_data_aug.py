@@ -31,8 +31,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--dataset", required=True,
-                      help="path to input dataset")
+    args.add_argument("-d", "--dataset", required=True, help="path to input dataset")
     args = vars(args.parse_args())
 
     # grab the list of images that we'll be describing, then extract
@@ -47,30 +46,28 @@ def main():
     image_to_array_preprocessor = ImageToArrayPreprocessor()
 
     # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
-    sdl = SimpleDatasetLoader(preprocessors=[aspect_aware_preprocessor,
-                                             image_to_array_preprocessor])
+    sdl = SimpleDatasetLoader(preprocessors=[aspect_aware_preprocessor, image_to_array_preprocessor])
     (data, labels) = sdl.load(image_paths, verbose=500)
     data = data.astype("float") / 255.0
 
     # partition the data into training and testing splits using 75% of
     # the data for training and the remaining 25% for testing
-    (train_x, test_x, train_y, test_y) = train_test_split(data,
-                                                          labels,
-                                                          test_size=0.25,
-                                                          random_state=42)
+    (train_x, test_x, train_y, test_y) = train_test_split(data, labels, test_size=0.25, random_state=42)
 
     # convert the labels from integers to vectors
     train_y = LabelBinarizer().fit_transform(train_y)
     test_y = LabelBinarizer().fit_transform(test_y)
 
     # construct the image generator for data augmentation
-    aug = ImageDataGenerator(rotation_range=30,
-                             width_shift_range=0.1,
-                             height_shift_range=0.1,
-                             shear_range=0.2,
-                             zoom_range=0.2,
-                             horizontal_flip=True,
-                             fill_mode="nearest")
+    aug = ImageDataGenerator(
+        rotation_range=30,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode="nearest",
+    )
 
     # initialize the optimizer and model
     print("[INFO] compiling model...")
@@ -80,18 +77,18 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit_generator(aug.flow(train_x, train_y, batch_size=32),
-                                    validation_data=(test_x, test_y),
-                                    steps_per_epoch=len(train_x) // 32,
-                                    epochs=100,
-                                    verbose=1)
+    model_fit = model.fit_generator(
+        aug.flow(train_x, train_y, batch_size=32),
+        validation_data=(test_x, test_y),
+        steps_per_epoch=len(train_x) // 32,
+        epochs=100,
+        verbose=1,
+    )
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=32)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=class_names))
+    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=class_names))
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")

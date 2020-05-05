@@ -22,9 +22,9 @@ from keras import backend as K
 class MiniGoogLeNet:
     """Implementation of MiniGoogLeNet architecture
     """
+
     @staticmethod
-    def conv_module(x, filter_num, filter_x_size, filter_y_size,
-                    stride, chanel_dim, padding="same"):
+    def conv_module(x, filter_num, filter_x_size, filter_y_size, stride, chanel_dim, padding="same"):
         """Define conv layer
 
         Arguments:
@@ -81,8 +81,7 @@ class MiniGoogLeNet:
             Tensor -- downsample module
         """
         # define the CONV module and POOL, then concatenate across the channel dimensions
-        conv_3x3 = MiniGoogLeNet.conv_module(x, filter_num, 3, 3, (2, 2),
-                                             chanel_dim, padding="valid")
+        conv_3x3 = MiniGoogLeNet.conv_module(x, filter_num, 3, 3, (2, 2), chanel_dim, padding="valid")
         pool = MaxPooling2D((3, 3), strides=(2, 2))(x)
         x = concatenate([conv_3x3, pool], axis=chanel_dim)
         # return the block

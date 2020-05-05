@@ -15,6 +15,7 @@ class ImageToArrayPreprocessor:
     Returns:
         array -- A 3D Numpy array
     """
+
     def __init__(self, data_format=None):
         """Initialize preprocessor
 

@@ -23,10 +23,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output directory of images")
-    args.add_argument("-n", "--num-images", type=int,
-                      default=500, help="# of images to download")
+    args.add_argument("-o", "--output", required=True, help="path to output directory of images")
+    args.add_argument("-n", "--num-images", type=int, default=500, help="# of images to download")
     args = vars(args.parse_args())
 
     # initialize the URL that contains the captcha images that we will be downloading along with
@@ -55,5 +53,5 @@ def main():
         time.sleep(0.1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

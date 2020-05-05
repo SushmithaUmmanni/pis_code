@@ -16,6 +16,7 @@ class SimpleDatasetLoader:
     Returns:
         tuple -- returns a tuple of the data and labels
     """
+
     def __init__(self, preprocessors=None):
         # specify the image preprocessors in a list. Each preprocessor will be a separate module
         # store the image preprocessor

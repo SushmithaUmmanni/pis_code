@@ -22,6 +22,7 @@ class TrainingMonitor(BaseLogger):
     Arguments:
         BaseLogger {class} -- Keras BaseLogger class
     """
+
     def __init__(self, fig_path, json_path=None, start_at=0):
         """Initialize the training monitor
 
@@ -60,7 +61,7 @@ class TrainingMonitor(BaseLogger):
                     # loop over the entries in the history log and trim any entries that are
                     # past the starting epoch
                     for k in self.history.keys():
-                        self.history[k] = self.history[k][:self.start_at]
+                        self.history[k] = self.history[k][: self.start_at]
 
     def on_epoch_end(self, epoch, logs=None):
         """Serialize the loss and accuracy for both the training and validation set to disk

@@ -24,12 +24,12 @@ def main():
     mean_preprocessor = MeanPreprocessor(means["R"], means["G"], means["B"])
     image_to_array_preprocessor = ImageToArrayPreprocessor()
     # initialize the testing dataset generator
-    test_gen = HDF5DatasetGenerator(config.TEST_HDF5,
-                                    64,
-                                    preprocessors=[simple_preprocessor,
-                                                   mean_preprocessor,
-                                                   image_to_array_preprocessor],
-                                    classes=config.NUM_CLASSES)
+    test_gen = HDF5DatasetGenerator(
+        config.TEST_HDF5,
+        64,
+        preprocessors=[simple_preprocessor, mean_preprocessor, image_to_array_preprocessor],
+        classes=config.NUM_CLASSES,
+    )
 
     # load the pre-trained network
     print("[INFO] loading model...")
@@ -37,9 +37,7 @@ def main():
 
     # make predictions on the testing data
     print("[INFO] predicting on test data...")
-    predictions = model.predict_generator(test_gen.generator(),
-                                          steps=test_gen.num_images // 64,
-                                          max_queue_size=10)
+    predictions = model.predict_generator(test_gen.generator(), steps=test_gen.num_images // 64, max_queue_size=10)
     # compute the rank-1 and rank-5 accuracies
     (rank1, rank5) = rank5_accuracy(predictions, test_gen.database["labels"])
     print("[INFO] rank-1: {:.2f}%".format(rank1 * 100))

@@ -24,8 +24,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-o", "--output", required=True,
-                      help="path to the output loss/accuracy plot")
+    args.add_argument("-o", "--output", required=True, help="path to the output loss/accuracy plot")
     args = vars(args.parse_args())
 
     # grab the MNIST dataset (if this is your first time using this
@@ -57,14 +56,16 @@ def main():
     print("[INFO] training network...")
     sgd = SGD(0.01)
     model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["accuracy"])
-    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y),
-                          epochs=100, batch_size=128)
+    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y), epochs=100, batch_size=128)
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=128)
-    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1),
-                                target_names=[str(x) for x in label_binarizer.classes_]))
+    print(
+        classification_report(
+            test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=[str(x) for x in label_binarizer.classes_]
+        )
+    )
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")
@@ -80,5 +81,5 @@ def main():
     plt.savefig(args["output"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -30,6 +30,7 @@ from keras import backend as K
 class AlexNet:
     """AlexNet architecture
     """
+
     @staticmethod
     def build(width, height, depth, classes, regularization=0.0002):
         """Build AlexNet
@@ -57,9 +58,16 @@ class AlexNet:
             channel_dimension = 1
 
         # Block #1: first CONV => RELU => POOL layer set
-        model.add(Conv2D(96, (11, 11), strides=(4, 4),
-                         input_shape=input_shape, padding="same",
-                         kernel_regularizer=l2(regularization)))
+        model.add(
+            Conv2D(
+                96,
+                (11, 11),
+                strides=(4, 4),
+                input_shape=input_shape,
+                padding="same",
+                kernel_regularizer=l2(regularization),
+            )
+        )
         model.add(Activation("relu"))
         model.add(BatchNormalization(axis=channel_dimension))
         model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))

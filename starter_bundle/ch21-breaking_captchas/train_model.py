@@ -32,10 +32,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--dataset", required=True,
-                      help="path to input dataset")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to output model")
+    args.add_argument("-d", "--dataset", required=True, help="path to input dataset")
+    args.add_argument("-m", "--model", required=True, help="path to output model")
     args = vars(args.parse_args())
 
     # initialize the data and labels
@@ -61,10 +59,7 @@ def main():
 
     # partition the data into training and testing splits using 75% of
     # the data for training and the remaining 25% for testing
-    (train_x, test_x, train_y, test_y) = train_test_split(data,
-                                                          labels,
-                                                          test_size=0.25,
-                                                          random_state=42)
+    (train_x, test_x, train_y, test_y) = train_test_split(data, labels, test_size=0.25, random_state=42)
     # convert the labels from integers to vectors
     label_binarizer = LabelBinarizer().fit(train_y)
     train_y = label_binarizer.transform(train_y)
@@ -78,19 +73,14 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x,
-                          train_y,
-                          validation_data=(test_x, test_y),
-                          batch_size=32,
-                          epochs=15,
-                          verbose=1)
+    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y), batch_size=32, epochs=15, verbose=1)
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=32)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=label_binarizer.classes_))
+    print(
+        classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_binarizer.classes_)
+    )
     # save the model to disk
     print("[INFO] serializing network...")
     model.save(args["model"])

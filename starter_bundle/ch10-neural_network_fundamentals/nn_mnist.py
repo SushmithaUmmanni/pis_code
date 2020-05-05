@@ -23,8 +23,9 @@ def main():
     print("[INFO] samples: {}, dim: {}".format(data.shape[0], data.shape[1]))
 
     # construct the training and testing splits
-    (train_x, test_x, train_y, test_y) = \
-        train_test_split(data, digits.target, test_size=0.25)  # pylint: disable=no-member
+    (train_x, test_x, train_y, test_y) = train_test_split(
+        data, digits.target, test_size=0.25
+    )  # pylint: disable=no-member
 
     # convert the labels from integers to vectors using one-hot-encoding
     train_y = LabelBinarizer().fit_transform(train_y)
@@ -43,5 +44,5 @@ def main():
     print(classification_report(test_y.argmax(axis=1), predictions))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

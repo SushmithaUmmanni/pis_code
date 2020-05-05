@@ -9,10 +9,10 @@ from .patchpreprocessor import PatchPreprocessor
 
 
 __all__ = [
-    'AspectAwarePreprocessor',
-    'CropPreprocessor',
-    'ImageToArrayPreprocessor',
-    'MeanPreprocessor',
-    'SimplePreprocessor',
-    'PatchPreprocessor',
+    "AspectAwarePreprocessor",
+    "CropPreprocessor",
+    "ImageToArrayPreprocessor",
+    "MeanPreprocessor",
+    "SimplePreprocessor",
+    "PatchPreprocessor",
 ]

@@ -28,19 +28,15 @@ def main():
 
     # perform stratified sampling from the training set to build the
     # testing split from the training data
-    split = train_test_split(train_paths,
-                             train_labels,
-                             test_size=config.NUM_TEST_IMAGES,
-                             stratify=train_labels,
-                             random_state=42)
+    split = train_test_split(
+        train_paths, train_labels, test_size=config.NUM_TEST_IMAGES, stratify=train_labels, random_state=42
+    )
     (train_paths, test_paths, train_labels, test_labels) = split
 
     # perform another stratified sampling, this time to build the validation data
-    split = train_test_split(train_paths,
-                             train_labels,
-                             test_size=config.NUM_VAL_IMAGES,
-                             stratify=train_labels,
-                             random_state=42)
+    split = train_test_split(
+        train_paths, train_labels, test_size=config.NUM_VAL_IMAGES, stratify=train_labels, random_state=42
+    )
     (train_paths, val_paths, train_labels, val_labels) = split
 
     # construct a list pairing the training, validation, and testing image paths along
@@ -48,7 +44,8 @@ def main():
     datasets = [
         ("train", train_paths, train_labels, config.TRAIN_HDF5),
         ("val", val_paths, val_labels, config.VAL_HDF5),
-        ("test", test_paths, test_labels, config.TEST_HDF5)]
+        ("test", test_paths, test_labels, config.TEST_HDF5),
+    ]
 
     # initialize the image preprocessor and the lists of RGB channel averages
     aap = AspectAwarePreprocessor(256, 256)
@@ -59,8 +56,7 @@ def main():
         print("[INFO] building {}...".format(output_path))
         writer = HDF5DatasetWriter((len(path_list), 256, 256, 3), output_path)
         # initialize the progress bar
-        widgets = ["Building Dataset: ", progressbar.Percentage(), " ",
-                   progressbar.Bar(), " ", progressbar.ETA()]
+        widgets = ["Building Dataset: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]
         pbar = progressbar.ProgressBar(maxval=len(path_list), widgets=widgets).start()
         # loop over the image paths
         for (i, (path, label)) in enumerate(zip(path_list, labels)):

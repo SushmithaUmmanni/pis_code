@@ -24,9 +24,11 @@ from keras import backend as K
 class DeeperGoogLeNet:
     """Implementation of DeeperGoogLeNet architecture
     """
+
     @staticmethod
-    def conv_module(x, filter_num, filter_x_size, filter_y_size, stride, chan_dim,
-                    padding="same", reg=0.0005, name=None):
+    def conv_module(
+        x, filter_num, filter_x_size, filter_y_size, stride, chan_dim, padding="same", reg=0.0005, name=None
+    ):
         """Define convolutional block
 
         Arguments:
@@ -53,20 +55,32 @@ class DeeperGoogLeNet:
             bn_name = name + "_bn"
             act_name = name + "_act"
             # define a CONV => BN => RELU pattern
-            x = Conv2D(filter_num, (filter_x_size, filter_y_size),
-                       strides=stride,
-                       padding=padding,
-                       kernel_regularizer=l2(reg),
-                       name=conv_name)(x)
+            x = Conv2D(
+                filter_num,
+                (filter_x_size, filter_y_size),
+                strides=stride,
+                padding=padding,
+                kernel_regularizer=l2(reg),
+                name=conv_name,
+            )(x)
             x = BatchNormalization(axis=chan_dim, name=bn_name)(x)
             x = Activation("relu", name=act_name)(x)
             # return the block
             return x
 
     @staticmethod
-    def inception_module(x, num1x1, num3x3Reduce, num3x3,   # pylint: disable=invalid-name
-                         num5x5Reduce, num5x5, num1x1Proj,  # pylint: disable=invalid-name
-                         chan_dim, stage, reg=0.0005):
+    def inception_module(
+        x,
+        num1x1,
+        num3x3Reduce,
+        num3x3,  # pylint: disable=invalid-name
+        num5x5Reduce,
+        num5x5,
+        num1x1Proj,  # pylint: disable=invalid-name
+        chan_dim,
+        stage,
+        reg=0.0005,
+    ):
         """Define Inception Module
 
         Args:
@@ -85,22 +99,18 @@ class DeeperGoogLeNet:
             Tensor: Inception module
         """
         # define the first branch of the Inception module which consists of 1x1 convolutions
-        first = DeeperGoogLeNet.conv_module(
-            x, num1x1, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_first")
+        first = DeeperGoogLeNet.conv_module(x, num1x1, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_first")
         # define the second branch of the Inception module consisting of 1x1 and 3x3 convolutions
-        second = DeeperGoogLeNet.conv_module(
-            x, num3x3Reduce, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_second1")
-        second = DeeperGoogLeNet.conv_module(
-            second, num3x3, 3, 3, (1, 1), chan_dim, reg=reg, name=stage + "_second2")
+        second = DeeperGoogLeNet.conv_module(x, num3x3Reduce, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_second1")
+        second = DeeperGoogLeNet.conv_module(second, num3x3, 3, 3, (1, 1), chan_dim, reg=reg, name=stage + "_second2")
         # define the third branch of the Inception module which are our 1x1 and 5x5 convolutions
-        third = DeeperGoogLeNet.conv_module(
-            x, num5x5Reduce, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_third1")
-        third = DeeperGoogLeNet.conv_module(
-            third, num5x5, 5, 5, (1, 1), chan_dim, reg=reg, name=stage + "_third2")
+        third = DeeperGoogLeNet.conv_module(x, num5x5Reduce, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_third1")
+        third = DeeperGoogLeNet.conv_module(third, num5x5, 5, 5, (1, 1), chan_dim, reg=reg, name=stage + "_third2")
         # define the fourth branch of the Inception module which is the POOL projection
         fourth = MaxPooling2D((3, 3), strides=(1, 1), padding="same", name=stage + "_pool")(x)
         fourth = DeeperGoogLeNet.conv_module(
-            fourth, num1x1Proj, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_fourth")
+            fourth, num1x1Proj, 1, 1, (1, 1), chan_dim, reg=reg, name=stage + "_fourth"
+        )
         # concatenate across the channel dimension
         x = concatenate([first, second, third, fourth], axis=chan_dim, name=stage + "_mixed")
         # return the block
@@ -148,8 +158,7 @@ class DeeperGoogLeNet:
         x = DeeperGoogLeNet.inception_module(x, 160, 112, 224, 24, 64, 64, chan_dim, "4b", reg=reg)
         x = DeeperGoogLeNet.inception_module(x, 128, 128, 256, 24, 64, 64, chan_dim, "4c", reg=reg)
         x = DeeperGoogLeNet.inception_module(x, 112, 144, 288, 32, 64, 64, chan_dim, "4d", reg=reg)
-        x = DeeperGoogLeNet.inception_module(x, 256, 160, 320, 32, 128, 128,
-                                             chan_dim, "4e", reg=reg)
+        x = DeeperGoogLeNet.inception_module(x, 256, 160, 320, 32, 128, 128, chan_dim, "4e", reg=reg)
         x = MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool4")(x)
 
         # apply a POOL layer (average) followed by dropout

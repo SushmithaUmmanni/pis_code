@@ -54,15 +54,20 @@ def main():
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_data, train_labels, validation_data=(test_data, test_labels),
-                          batch_size=128, epochs=20, verbose=1)
+    model_fit = model.fit(
+        train_data, train_labels, validation_data=(test_data, test_labels), batch_size=128, epochs=20, verbose=1
+    )
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_data, batch_size=128)
-    print(classification_report(test_labels.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=[str(x) for x in label_binarizer.classes_]))
+    print(
+        classification_report(
+            test_labels.argmax(axis=1),
+            predictions.argmax(axis=1),
+            target_names=[str(x) for x in label_binarizer.classes_],
+        )
+    )
     # plot the training loss and accuracy
     plt.style.use("ggplot")
     plt.figure()
@@ -77,5 +82,5 @@ def main():
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

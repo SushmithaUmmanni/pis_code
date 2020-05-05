@@ -85,7 +85,7 @@ def next_batch(X, y, batch_size):
     # loop over our dataset `X` in mini-batches, yielding a
     # the current batched data and labels
     for i in np.arange(0, X.shape[0], batch_size):
-        yield (X[i:i + batch_size], y[i:i + batch_size])
+        yield (X[i : i + batch_size], y[i : i + batch_size])
 
 
 def main():
@@ -93,12 +93,9 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-e", "--epochs", type=float, default=100,
-                      help="# of epochs")
-    args.add_argument("-a", "--alpha", type=float, default=0.01,
-                      help="learning rate")
-    args.add_argument("-b", "--batch-size", type=int, default=32,
-                      help="size of SGD mini-batches")
+    args.add_argument("-e", "--epochs", type=float, default=100, help="# of epochs")
+    args.add_argument("-a", "--alpha", type=float, default=0.01, help="learning rate")
+    args.add_argument("-b", "--batch-size", type=int, default=32, help="size of SGD mini-batches")
     args = vars(args.parse_args())
 
     # generate a 2-class classification problem with 1,000 data points,
@@ -170,5 +167,5 @@ def main():
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

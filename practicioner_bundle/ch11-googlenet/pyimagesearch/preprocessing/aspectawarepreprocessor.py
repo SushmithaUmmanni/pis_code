@@ -21,6 +21,7 @@ class AspectAwarePreprocessor:
     Returns:
         array -- resized image with unchanged aspect ratio
     """
+
     def __init__(self, width, height, inter=cv2.INTER_AREA):
         """Initialize preprocessor.
 
@@ -69,7 +70,7 @@ class AspectAwarePreprocessor:
         # now that our images have been resized, we need to re-grab the
         # width and height, followed by performing the crop
         (height, width) = image.shape[:2]
-        image = image[height_delta:height - height_delta, width_delta:width - width_delta]
+        image = image[height_delta : height - height_delta, width_delta : width - width_delta]
         # finally, resize the image to the provided spatial dimensions
         # to ensure our output image is always a fixed size
         return cv2.resize(image, (self.width, self.height), interpolation=self.inter)

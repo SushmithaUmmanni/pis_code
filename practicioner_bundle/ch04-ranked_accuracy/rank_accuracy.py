@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """Implementing Ranked Accuracy
 
@@ -28,10 +27,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--db", required=True,
-                      help="path HDF5 database")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to pre-trained model")
+    args.add_argument("-d", "--db", required=True, help="path HDF5 database")
+    args.add_argument("-m", "--model", required=True, help="path to pre-trained model")
     args = vars(args.parse_args())
 
     # load the pre-trained model

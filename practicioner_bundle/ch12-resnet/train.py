@@ -36,6 +36,7 @@ from pyimagesearch.callbacks import TrainingMonitor
 from pyimagesearch.io import HDF5DatasetGenerator
 from pyimagesearch.nn.conv import ResNet
 from config import tiny_imagenet_config as config
+
 # set the matplotlib backend so figures can be saved in the background
 matplotlib.use("Agg")
 # set a high recursion limit so Theano doesn't complain
@@ -47,22 +48,21 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-c", "--checkpoints", required=True,
-                      help="path to output checkpoint directory")
-    args.add_argument("-m", "--model", type=str,
-                      help="path to *specific* model checkpoint to load")
-    args.add_argument("-s", "--start-epoch", type=int, default=0,
-                      help="epoch to restart training at")
+    args.add_argument("-c", "--checkpoints", required=True, help="path to output checkpoint directory")
+    args.add_argument("-m", "--model", type=str, help="path to *specific* model checkpoint to load")
+    args.add_argument("-s", "--start-epoch", type=int, default=0, help="epoch to restart training at")
     args = vars(args.parse_args())
 
     # construct the training image generator for data augmentation
-    aug = ImageDataGenerator(rotation_range=18,
-                             zoom_range=0.15,
-                             width_shift_range=0.2,
-                             height_shift_range=0.2,
-                             shear_range=0.15,
-                             horizontal_flip=True,
-                             fill_mode="nearest")
+    aug = ImageDataGenerator(
+        rotation_range=18,
+        zoom_range=0.15,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.15,
+        horizontal_flip=True,
+        fill_mode="nearest",
+    )
 
     # load the RGB means for the training set
     means = json.loads(open(config.DATASET_MEAN).read())
@@ -72,27 +72,28 @@ def main():
     image_to_array_preprocessor = ImageToArrayPreprocessor()
 
     # initialize the training and validation dataset generators
-    train_gen = HDF5DatasetGenerator(config.TRAIN_HDF5,
-                                     64,
-                                     augmentation=aug,
-                                     preprocessors=[simple_preprocessor,
-                                                    mean_preprocessor,
-                                                    image_to_array_preprocessor],
-                                     classes=config.NUM_CLASSES)
+    train_gen = HDF5DatasetGenerator(
+        config.TRAIN_HDF5,
+        64,
+        augmentation=aug,
+        preprocessors=[simple_preprocessor, mean_preprocessor, image_to_array_preprocessor],
+        classes=config.NUM_CLASSES,
+    )
 
-    val_gen = HDF5DatasetGenerator(config.VAL_HDF5,
-                                   64,
-                                   preprocessors=[simple_preprocessor,
-                                                  mean_preprocessor,
-                                                  image_to_array_preprocessor],
-                                   classes=config.NUM_CLASSES)
+    val_gen = HDF5DatasetGenerator(
+        config.VAL_HDF5,
+        64,
+        preprocessors=[simple_preprocessor, mean_preprocessor, image_to_array_preprocessor],
+        classes=config.NUM_CLASSES,
+    )
 
     # if there is no specific model checkpoint supplied, then initialize
     # the network and compile the model
     if args["model"] is None:
         print("[INFO] compiling model...")
-        model = ResNet.build(64, 64, 3, config.NUM_CLASSES, (3, 4, 6),
-                             (64, 128, 256, 512), reg=0.0005, dataset="tiny_imagenet")
+        model = ResNet.build(
+            64, 64, 3, config.NUM_CLASSES, (3, 4, 6), (64, 128, 256, 512), reg=0.0005, dataset="tiny_imagenet"
+        )
         opt = SGD(lr=1e-1, momentum=0.9)
         model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
@@ -108,17 +109,20 @@ def main():
     # construct the set of callbacks
     callbacks = [
         EpochCheckpoint(args["checkpoints"], every=5, start_at=args["start_epoch"]),
-        TrainingMonitor(config.FIG_PATH, json_path=config.JSON_PATH, start_at=args["start_epoch"])
-        ]
+        TrainingMonitor(config.FIG_PATH, json_path=config.JSON_PATH, start_at=args["start_epoch"]),
+    ]
 
     # train the network
-    model.fit_generator(train_gen.generator(),
-                        steps_per_epoch=train_gen.num_images // 64,
-                        validation_data=val_gen.generator(),
-                        validation_steps=val_gen.num_images // 64,
-                        epochs=50,
-                        max_queue_size=10,
-                        callbacks=callbacks, verbose=1)
+    model.fit_generator(
+        train_gen.generator(),
+        steps_per_epoch=train_gen.num_images // 64,
+        validation_data=val_gen.generator(),
+        validation_steps=val_gen.num_images // 64,
+        epochs=50,
+        max_queue_size=10,
+        callbacks=callbacks,
+        verbose=1,
+    )
 
     # close the databases
     train_gen.close()

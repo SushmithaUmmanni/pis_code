@@ -22,6 +22,7 @@ import h5py
 class HDF5DatasetWriter:
     """Write data to to HDF5 format.
     """
+
     def __init__(self, dims, output_path, data_key="images", buffer_size=1000):
         """Initialize HDF5 dataset writer
 
@@ -38,8 +39,11 @@ class HDF5DatasetWriter:
         """
         # check to see if the output path exists, and if so, raise an exception
         if os.path.exists(output_path):
-            raise ValueError("The supplied `output_path` already exists and cannot be overwritten."
-                             "Manually delete the file before continuing.", output_path)
+            raise ValueError(
+                "The supplied `output_path` already exists and cannot be overwritten."
+                "Manually delete the file before continuing.",
+                output_path,
+            )
         # open the HDF5 database for writing and create two datasets: one to store the
         # images/features and another to store the class labels
         self.db = h5py.File(output_path, "w")
@@ -68,8 +72,8 @@ class HDF5DatasetWriter:
         """write the buffers to disk then reset the buffer
         """
         i = self.idx + len(self.buffer["data"])
-        self.data[self.idx:i] = self.buffer["data"]
-        self.labels[self.idx:i] = self.buffer["labels"]
+        self.data[self.idx : i] = self.buffer["data"]
+        self.labels[self.idx : i] = self.buffer["labels"]
         self.idx = i
         self.buffer = {"data": [], "labels": []}
 
@@ -80,7 +84,7 @@ class HDF5DatasetWriter:
             class_labels {list} -- list of class labels
         """
         # create a dataset to store the actual class label names, then store the class labels
-        data_type = h5py.special_dtype(vlen='unicode')
+        data_type = h5py.special_dtype(vlen="unicode")
         label_set = self.db.create_dataset("label_names", (len(class_labels),), dtype=data_type)
         label_set[:] = class_labels
 

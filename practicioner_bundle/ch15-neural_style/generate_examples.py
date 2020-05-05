@@ -20,7 +20,7 @@ PARAMS = [
     "cw_10.0-sw_10.0-tvw_1000.0",
     "cw_10.0-sw_1000.0-tvw_1000.0",
     "cw_50.0-sw_10000.0-tvw_100.0",
-    "cw_100.0-sw_1000.0-tvw_100.0"
+    "cw_100.0-sw_1000.0-tvw_100.0",
 ]
 
 # initialize the base dictionary
@@ -30,19 +30,15 @@ SETTINGS = {
     "input_path": None,
     "style_path": None,
     "output_path": None,
-
     # define the CNN to be used style transfer, along with the
     # set of content layer and style layers, respectively
     "net": VGG19,
     "content_layer": "block4_conv2",
-    "style_layers": ["block1_conv1", "block2_conv1",
-                     "block3_conv1", "block4_conv1", "block5_conv1"],
-
+    "style_layers": ["block1_conv1", "block2_conv1", "block3_conv1", "block4_conv1", "block5_conv1"],
     # store the content, style, and total variation weights, respectively
     "content_weight": None,
     "style_weight": None,
     "tv_weight": None,
-
     # number of iterations
     "iterations": 50,
 }
@@ -80,10 +76,10 @@ def main():
                 }
 
                 # parse the filenames
-                input_filename = input_path[input_path.rfind("/") + 1:]
-                input_filename = input_filename[:input_filename.rfind(".")]
-                style_filename = style_path[style_path.rfind("/") + 1:]
-                style_filename = style_filename[:style_filename.rfind(".")]
+                input_filename = input_path[input_path.rfind("/") + 1 :]
+                input_filename = input_filename[: input_filename.rfind(".")]
+                style_filename = style_path[style_path.rfind("/") + 1 :]
+                style_filename = style_filename[: style_filename.rfind(".")]
 
                 # construct the path to the output file
                 output_filepath = "_".join([input_filename, style_filename, param])

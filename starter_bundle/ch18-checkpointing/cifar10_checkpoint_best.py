@@ -24,8 +24,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-w", "--weights", required=True,
-                      help="path to best model weights file")
+    args.add_argument("-w", "--weights", required=True, help="path to best model weights file")
     args = vars(args.parse_args())
 
     # load the training and testing data, then scale it into the range [0, 1]
@@ -46,21 +45,14 @@ def main():
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
     # construct the callback to save only the *best* model to disk based on the validation loss
-    checkpoint = ModelCheckpoint(args["weights"],
-                                 monitor="val_loss",
-                                 save_best_only=True,
-                                 verbose=1)
+    checkpoint = ModelCheckpoint(args["weights"], monitor="val_loss", save_best_only=True, verbose=1)
     callbacks = [checkpoint]
     # train the network
     print("[INFO] training network...")
-    model.fit(train_x,
-              train_y,
-              validation_data=(test_x, test_y),
-              batch_size=64,
-              epochs=40,
-              callbacks=callbacks,
-              verbose=2)
+    model.fit(
+        train_x, train_y, validation_data=(test_x, test_y), batch_size=64, epochs=40, callbacks=callbacks, verbose=2
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

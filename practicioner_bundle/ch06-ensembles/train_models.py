@@ -28,6 +28,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelBinarizer
 from pyimagesearch.nn.conv import MiniVGGNet
+
 # set the matplotlib backend so figures can be saved in the background
 matplotlib.use("Agg")
 
@@ -37,12 +38,9 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output directory")
-    args.add_argument("-m", "--models", required=True,
-                      help="path to output models directory")
-    args.add_argument("-n", "--num-models", type=int, default=5,
-                      help="# of models to train")
+    args.add_argument("-o", "--output", required=True, help="path to output directory")
+    args.add_argument("-m", "--models", required=True, help="path to output models directory")
+    args.add_argument("-n", "--num-models", type=int, default=5, help="# of models to train")
     args = vars(args.parse_args())
 
     # load the training and testing data, then scale it into the range [0, 1]
@@ -56,15 +54,12 @@ def main():
     test_y = label_binarizer.transform(test_y)
 
     # initialize the label names for the CIFAR-10 dataset
-    label_names = ["airplane", "automobile", "bird", "cat", "deer",
-                   "dog", "frog", "horse", "ship", "truck"]
+    label_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 
     # construct the image generator for data augmentation
-    augmentation = ImageDataGenerator(rotation_range=10,
-                                      width_shift_range=0.1,
-                                      height_shift_range=0.1,
-                                      horizontal_flip=True,
-                                      fill_mode="nearest")
+    augmentation = ImageDataGenerator(
+        rotation_range=10, width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True, fill_mode="nearest"
+    )
 
     # loop over the number of models to train
     for i in np.arange(0, args["num_models"]):
@@ -74,19 +69,20 @@ def main():
         model = MiniVGGNet.build(width=32, height=32, depth=3, classes=10)
         model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # train the network
-        model_fit = model.fit_generator(augmentation.flow(train_x, train_y, batch_size=64),
-                                        validation_data=(test_x, test_y),
-                                        epochs=40,
-                                        steps_per_epoch=len(train_x) // 64, verbose=1)
+        model_fit = model.fit_generator(
+            augmentation.flow(train_x, train_y, batch_size=64),
+            validation_data=(test_x, test_y),
+            epochs=40,
+            steps_per_epoch=len(train_x) // 64,
+            verbose=1,
+        )
         # save the model to disk
         path = [args["models"], "model_{}.model".format(i)]
         model.save(os.path.sep.join(path))
 
         # evaluate the network
         predictions = model.predict(test_x, batch_size=64)
-        report = classification_report(test_y.argmax(axis=1),
-                                       predictions.argmax(axis=1),
-                                       target_names=label_names)
+        report = classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_names)
 
         # save the classification report to file
         path = [args["output"], "model_{}.txt".format(i)]

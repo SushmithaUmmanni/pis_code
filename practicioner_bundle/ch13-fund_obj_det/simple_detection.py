@@ -45,10 +45,10 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--image", required=True,
-                      help="path to the input image")
-    args.add_argument("-c", "--confidence", type=float, default=0.5,
-                      help="minimum probability to filter weak detections")
+    args.add_argument("-i", "--image", required=True, help="path to the input image")
+    args.add_argument(
+        "-c", "--confidence", type=float, default=0.5, help="minimum probability to filter weak detections"
+    )
     args = vars(args.parse_args())
 
     # load our the network weights from disk
@@ -86,22 +86,14 @@ def main():
             # check to see if our batch is full
             if len(batch_rois) == BATCH_SIZE:
                 # classify the batch, then reset the batch ROIs and (x, y)-coordinates
-                labels = classify_batch(model,
-                                        batch_rois,
-                                        batch_locs,
-                                        labels,
-                                        min_probability=args["confidence"])
+                labels = classify_batch(model, batch_rois, batch_locs, labels, min_probability=args["confidence"])
                 # reset the batch ROIs and (x, y)-coordinates
                 batch_rois = None
                 batch_locs = []
 
     # check to see if there are any remaining ROIs that still need to be classified
     if batch_rois is not None:
-        labels = classify_batch(model,
-                                batch_rois,
-                                batch_locs,
-                                labels,
-                                min_probability=args["confidence"])
+        labels = classify_batch(model, batch_rois, batch_locs, labels, min_probability=args["confidence"])
     # show how long the detection process took
     end = time.time()
     print("[INFO] detections took {:.4f} seconds".format(end - start))

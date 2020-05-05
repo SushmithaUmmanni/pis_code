@@ -36,7 +36,7 @@ MODELS = {
     "vgg19": VGG19,
     "inception": InceptionV3,
     "xception": Xception,  # TensorFlow ONLY
-    "resnet": ResNet50
+    "resnet": ResNet50,
 }
 
 
@@ -48,16 +48,13 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--image", required=True,
-                      help="path to the input image")
-    args.add_argument("-model", "--model", type=str, default="vgg16",
-                      help="name of pre-trained network to use")
+    args.add_argument("-i", "--image", required=True, help="path to the input image")
+    args.add_argument("-model", "--model", type=str, default="vgg16", help="name of pre-trained network to use")
     args = vars(args.parse_args())
 
     # ensure a valid model name was supplied via command line argument
     if args["model"] not in MODELS.keys():
-        raise AssertionError("The --model command line argument should "
-                             "be a key in the `MODELS` dictionary")
+        raise AssertionError("The --model command line argument should " "be a key in the `MODELS` dictionary")
 
     # initialize the input image shape (224x224 pixels) along with the pre-processing function
     # (this might need to be changed based on which model we use to classify our image)
@@ -101,11 +98,10 @@ def main():
         # and display the image to our screen
         orig = cv2.imread(args["image"])
         (_, label, prob) = prediction[0][0]
-        cv2.putText(orig, "Label: {}".format(label), (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+        cv2.putText(orig, "Label: {}".format(label), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
         cv2.imshow("Classification", orig)
         cv2.waitKey(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

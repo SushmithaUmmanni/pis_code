@@ -1,34 +1,28 @@
 # -*- coding: utf-8 -*-
-"""Model Serializer
-
-Class for checkpointing the model at a certain epoch
-
-Attributes:
-    output_path (str):
-        path to our output dir where we will store the weights
-    every (int, optional):
-        checkpoint interval, where the weight will be serialized
-    start_at (int, optional):
-        The starting epoch that training is resumed at when using ctrl + c training.
-"""
+"""Model Serializer."""
 import os
 from keras.callbacks import Callback
 
 
 class EpochCheckpoint(Callback):
-    """Serialize weights at target epoch
     """
+    Module for serializing weights at target epoch.
+
+    Attributes:
+        output_path (str): Path to our output dir where we will store the weights.
+        every (int): Checkpoint interval, where the weight will be serialized.
+        int_epoch (int): Starting epoch that training is resumed at when using ctrl + c training.
+    """
+
     def __init__(self, output_path, every=5, start_at=0):
-        """Initialized model checkpointer
+        """
+        Initialized model checkpointer.
 
-        Arguments:
-            Callback {class} -- Keras Callback class
-            output_path {str} --  path to our output dir where the model weight will be stored
-
-        Keyword Arguments:
-            every {int} -- checkpoint interval (default: {5})
-            start_at {int} -- The starting epoch that training is resumed at when using ctrl + c
-                              training. (default: {0})
+        Args:
+            output_path (str): Path to our output dir where we will store the weights.
+            every (int, optional): Checkpoint interval, where the weight will be serialized.
+            start_at (int, optional): Starting epoch that training is resumed at when using
+                                      ctrl + c training.
         """
         # call the parent constructor
         super(EpochCheckpoint, self).__init__()
@@ -39,22 +33,19 @@ class EpochCheckpoint(Callback):
         self.int_epoch = start_at
 
     def on_epoch_end(self, epoch, logs=None):
-        """Serialize the weights for both the training and validation set to disk
+        """
+        Serialize the weights for both the training and validation set to disk.
 
         This functions automatically receives parameters from Keras and requires
         epoch and logs as parameters.
 
-        Arguments:
-            epoch {int} -- Epoch number
-
-        Keyword Arguments:
-            logs {dict} -- training and validation loss + accuracy for the current epoch
-                           (default: {None})
+        Args:
+            epoch (int): Target epoch number.
+            logs (dict, optional): Training and validation loss + accuracy for the current epoch.
         """
         # check to see if the model should be serialized to disk
         if (self.int_epoch + 1) % self.every == 0:
             path = os.path.sep.join([self.output_path, "epoch_{}.hdf5".format(self.int_epoch + 1)])
             self.model.save(path, overwrite=True)
-
         # increment the internal epoch counter
         self.int_epoch += 1

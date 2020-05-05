@@ -23,6 +23,7 @@ from scipy.optimize import fmin_l_bfgs_b
 class NeuralStyle:
     """Implementation of neural style architecture
     """
+
     def __init__(self, settings):
         # store the settings dictionary
         self.settings = settings
@@ -44,9 +45,7 @@ class NeuralStyle:
 
         # load our model from disk
         print("[INFO] loading network...")
-        self.model = self.settings["net"](weights="imagenet",
-                                          include_top=False,
-                                          input_tensor=self.input)
+        self.model = self.settings["net"](weights="imagenet", include_top=False, input_tensor=self.input)
 
         # build a dictionary that maps the *name* of each layer
         # inside the network to the actual layer *output*
@@ -77,7 +76,7 @@ class NeuralStyle:
 
             # compute the style reconstruction loss as we go
             T = self.styleReconLoss(style_features, output_features)
-            style_loss += (weight * T)
+            style_loss += weight * T
 
         # finish computing the style loss, compute the total  variational loss,
         # and then compute the total loss that combines all three
@@ -196,8 +195,8 @@ class NeuralStyle:
         # the output page -- here we avoid border pixels to avoid
         # artifacts
         (h, w) = self.dims
-        A = K.square(X[:, :h - 1, :w - 1, :] - X[:, 1:, :w - 1, :])
-        B = K.square(X[:, :h - 1, :w - 1, :] - X[:, :h - 1, 1:, :])
+        A = K.square(X[:, : h - 1, : w - 1, :] - X[:, 1:, : w - 1, :])
+        B = K.square(X[:, : h - 1, : w - 1, :] - X[:, : h - 1, 1:, :])
         loss = K.sum(K.pow(A + B, 1.25))
         # return the total variational loss
         return loss
@@ -209,12 +208,8 @@ class NeuralStyle:
         # start looping over the desired number of iterations
         for i in range(0, self.settings["iterations"]):
             # run L-BFGS over the pixels in our generated image to minimize the neural style loss
-            print("[INFO] starting iteration {} of {}...".format(
-                i + 1, self.settings["iterations"]))
-            (X, loss, _) = fmin_l_bfgs_b(self.loss,
-                                         X.flatten(),
-                                         fprime=self.grads,
-                                         maxfun=maxEvals)
+            print("[INFO] starting iteration {} of {}...".format(i + 1, self.settings["iterations"]))
+            (X, loss, _) = fmin_l_bfgs_b(self.loss, X.flatten(), fprime=self.grads, maxfun=maxEvals)
             print("[INFO] end of iteration {}, loss: {:.4e}".format(i + 1, loss))
 
             # deprocess the generated image and write it to disk

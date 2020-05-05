@@ -5,4 +5,8 @@ from .lenet import LeNet
 from .minivggnet import MiniVGGNet
 
 
-__all__ = ['ShallowNet', 'LeNet', 'MiniVGGNet', ]
+__all__ = [
+    "ShallowNet",
+    "LeNet",
+    "MiniVGGNet",
+]

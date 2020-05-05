@@ -22,6 +22,7 @@ from keras.optimizers import SGD
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelBinarizer
 from pyimagesearch.nn.conv import MiniVGGNet
+
 # set the matplotlib backend so figures can be saved in the background
 matplotlib.use("Agg")
 
@@ -31,8 +32,7 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-o", "--output", required=True,
-                      help="path to the output loss/accuracy plot")
+    args.add_argument("-o", "--output", required=True, help="path to the output loss/accuracy plot")
     args = vars(args.parse_args())
 
     # load the training and testing data, then scale it into the range [0, 1]
@@ -47,8 +47,7 @@ def main():
     test_y = label_binarizer.transform(test_y)
 
     # initialize the label names for the CIFAR-10 dataset
-    label_names = ["airplane", "automobile", "bird", "cat", "deer",
-                   "dog", "frog", "horse", "ship", "truck"]
+    label_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 
     # initialize the optimizer and model
     print("[INFO] compiling model...")
@@ -59,18 +58,11 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x,
-                          train_y,
-                          validation_data=(test_x, test_y),
-                          batch_size=64,
-                          epochs=40,
-                          verbose=1)
+    model_fit = model.fit(train_x, train_y, validation_data=(test_x, test_y), batch_size=64, epochs=40, verbose=1)
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=64)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=label_names))
+    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_names))
 
     # plot the training loss and accuracy
     plt.style.use("ggplot")
@@ -86,5 +78,5 @@ def main():
     plt.savefig(args["output"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -3,4 +3,6 @@
 from .trainingmonitor import TrainingMonitor
 
 
-__all__ = ['TrainingMonitor', ]
+__all__ = [
+    "TrainingMonitor",
+]

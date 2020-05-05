@@ -15,6 +15,7 @@ from keras import backend as K
 class MiniVGGNet:
     """Implementation of MiniVGGNet architecture
     """
+
     @staticmethod
     def build(width, height, depth, classes):
         """Build MiniVGGNet model

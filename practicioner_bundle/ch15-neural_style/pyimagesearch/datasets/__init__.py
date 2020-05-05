@@ -1,6 +1,7 @@
-"""Import custom datasets packages
-"""
+"""Import custom datasets packages."""
 from .simpledatasetloader import SimpleDatasetLoader
 
 
-__all__ = ['SimpleDatasetLoader', ]
+__all__ = [
+    "SimpleDatasetLoader",
+]

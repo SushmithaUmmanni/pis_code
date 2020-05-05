@@ -17,6 +17,7 @@ import numpy as np
 class NeuralNetwork:
     """Implementation of backpropagation algorithm.
     """
+
     def __init__(self, layers, alpha=0.1):
         """Initialize the neural network.
 
@@ -51,8 +52,7 @@ class NeuralNetwork:
         Returns:
             str: network architecture
         """
-        return "NeuralNetwork: {}".format(
-            "-".join(str(l) for l in self.layers))
+        return "NeuralNetwork: {}".format("-".join(str(l) for l in self.layers))
 
     def sigmoid(self, x):
         """Commpute the sigmoid activation value for a given input.

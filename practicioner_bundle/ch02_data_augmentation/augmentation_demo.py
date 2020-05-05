@@ -24,12 +24,9 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--image", required=True,
-                      help="path to the input image")
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output directory to store augmentation examples")
-    args.add_argument("-p", "--prefix", type=str, default="image",
-                      help="output filename prefix")
+    args.add_argument("-i", "--image", required=True, help="path to the input image")
+    args.add_argument("-o", "--output", required=True, help="path to output directory to store augmentation examples")
+    args.add_argument("-p", "--prefix", type=str, default="image", help="output filename prefix")
     args = vars(args.parse_args())
 
     # load the input image, convert it to a NumPy array,
@@ -41,15 +38,20 @@ def main():
 
     # construct the image generator for data augmentation then
     # initialize the total number of images generated thus far
-    aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1, height_shift_range=0.1,
-                             shear_range=0.2, zoom_range=0.2, horizontal_flip=True,
-                             fill_mode="nearest")
+    aug = ImageDataGenerator(
+        rotation_range=30,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode="nearest",
+    )
     total = 0
 
     # construct the actual Python generator
     print("[INFO] generating images...")
-    image_gen = aug.flow(image, batch_size=1, save_to_dir=args["output"],
-                         save_prefix=args["prefix"], save_format="jpg")
+    image_gen = aug.flow(image, batch_size=1, save_to_dir=args["output"], save_prefix=args["prefix"], save_format="jpg")
     # loop over examples from our image data augmentation generator
     for image in image_gen:
         # increment our counter
@@ -59,5 +61,5 @@ def main():
             break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

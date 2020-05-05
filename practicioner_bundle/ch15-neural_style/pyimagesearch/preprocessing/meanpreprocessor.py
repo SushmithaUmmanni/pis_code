@@ -18,6 +18,7 @@ import cv2
 class MeanPreprocessor:
     """Run the mean preprocessor
     """
+
     def __init__(self, r_mean, g_mean, b_mean):
         """Initialize the mean preprocessor
 

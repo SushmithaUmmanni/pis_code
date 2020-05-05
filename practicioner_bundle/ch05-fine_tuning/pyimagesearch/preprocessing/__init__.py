@@ -4,4 +4,8 @@ from .simplepreprocessor import SimplePreprocessor
 from .imagetoarraypreprocessor import ImageToArrayPreprocessor
 from .aspectawarepreprocessor import AspectAwarePreprocessor
 
-__all__ = ['SimplePreprocessor', 'ImageToArrayPreprocessor', 'AspectAwarePreprocessor', ]
+__all__ = [
+    "SimplePreprocessor",
+    "ImageToArrayPreprocessor",
+    "AspectAwarePreprocessor",
+]

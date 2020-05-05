@@ -28,10 +28,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--input", required=True,
-                      help="path to input directory of images")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to input model")
+    args.add_argument("-i", "--input", required=True, help="path to input directory of images")
+    args.add_argument("-m", "--model", required=True, help="path to input model")
     args = vars(args.parse_args())
 
     # load the pre-trained network
@@ -69,7 +67,7 @@ def main():
         for contour in cnts:
             # compute the bounding box for the contour then extract the digit
             (x, y, w, h) = cv2.boundingRect(contour)
-            roi = gray[y - 5:y + h + 5, x - 5:x + w + 5]
+            roi = gray[y - 5 : y + h + 5, x - 5 : x + w + 5]
 
             # pre-process the ROI and classify it then classify it
             roi = preprocess(roi, 28, 28)
@@ -79,8 +77,7 @@ def main():
 
             # draw the prediction on the output image
             cv2.rectangle(output, (x - 2, y - 2), (x + w + 4, y + h + 4), (0, 255, 0), 1)
-            cv2.putText(output, str(pred), (x - 5, y - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+            cv2.putText(output, str(pred), (x - 5, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
 
         # show the output image
         print("[INFO] captcha: {}".format("".join(predictions)))

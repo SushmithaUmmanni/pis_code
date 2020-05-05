@@ -76,16 +76,13 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-e", "--epochs", type=int, default=100,
-                      help="# of epochs")
-    args.add_argument("-a", "--alpha", type=float, default=0.01,
-                      help="learning rate")
+    args.add_argument("-e", "--epochs", type=int, default=100, help="# of epochs")
+    args.add_argument("-a", "--alpha", type=float, default=0.01, help="learning rate")
     args = vars(args.parse_args())
 
     # generate a 2-class classification problem with 1,000 data points,
     # where each data point is a 2D feature vector
-    (X, y) = make_blobs(n_samples=1000, n_features=2, centers=2,
-                        cluster_std=1.5, random_state=1)
+    (X, y) = make_blobs(n_samples=1000, n_features=2, centers=2, cluster_std=1.5, random_state=1)
     y = y.reshape((y.shape[0], 1))
     # insert a column of 1's as the last entry in the feature
     # matrix - - this little trick allows us to treat the bias
@@ -115,7 +112,7 @@ def main():
         # the gradient descent update is the dot product between our
         # (1) features and (2) the error of the sigmoid derivative of
         # our predictions
-        print('deriv', type(preds))
+        print("deriv", type(preds))
         derivate_error = error * sigmoid_deriv(preds)
         gradient = train_x.T.dot(derivate_error)
         # in the update stage, all we need to do is "nudge" the weight
@@ -148,5 +145,5 @@ def main():
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

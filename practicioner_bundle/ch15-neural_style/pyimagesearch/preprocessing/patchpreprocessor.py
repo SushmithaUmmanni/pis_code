@@ -18,6 +18,7 @@ from sklearn.feature_extraction.image import extract_patches_2d
 class PatchPreprocessor:
     """Run the path preprocessor
     """
+
     def __init__(self, width, height):
         """Initialize the preprocessor
 

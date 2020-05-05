@@ -26,11 +26,9 @@ def main():
     train_labels = label_encoder.fit_transform(train_labels)
 
     # perform stratified sampling from the training set to construct a testing set
-    split = train_test_split(train_paths,
-                             train_labels,
-                             test_size=config.NUM_TEST_IMAGES,
-                             stratify=train_labels,
-                             random_state=42)
+    split = train_test_split(
+        train_paths, train_labels, test_size=config.NUM_TEST_IMAGES, stratify=train_labels, random_state=42
+    )
     (train_paths, test_paths, train_labels, test_labels) = split
 
     # load the validation filename => class from file and then use these
@@ -45,7 +43,7 @@ def main():
     datasets = [
         ("train", train_paths, train_labels, config.TRAIN_HDF5),
         ("val", val_paths, val_labels, config.VAL_HDF5),
-        ("test", test_paths, test_labels, config.TEST_HDF5)
+        ("test", test_paths, test_labels, config.TEST_HDF5),
     ]
 
     # initialize the lists of RGB channel averages
@@ -57,8 +55,7 @@ def main():
         print("[INFO] building {}...".format(output_path))
         writer = HDF5DatasetWriter((len(image_paths), 64, 64, 3), output_path)
         # initialize the progress bar
-        widgets = ["Building Dataset: ", progressbar.Percentage(), " ",
-                   progressbar.Bar(), " ", progressbar.ETA()]
+        widgets = ["Building Dataset: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]
         pbar = progressbar.ProgressBar(maxval=len(image_paths), widgets=widgets).start()
 
         # loop over the image paths

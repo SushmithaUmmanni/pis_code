@@ -37,13 +37,14 @@ def main():
         print("[INFO] {}: {:.2f}".format(label, score))
 
     # draw the label with the highest score on the image as our prediction
-    cv2.putText(orig, "Label: {}".format(labels[np.argmax(scores)]), (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    cv2.putText(
+        orig, "Label: {}".format(labels[np.argmax(scores)]), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2
+    )
 
     # display our input image
     cv2.imshow("Image", orig)
     cv2.waitKey(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

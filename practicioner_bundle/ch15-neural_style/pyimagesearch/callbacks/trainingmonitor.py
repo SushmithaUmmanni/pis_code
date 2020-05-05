@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Class for Monitoring the Training Process.
-
-Attributes:
-    fig_path (str):
-        path to the output plot used to visualize loss and accuracy over time.
-    json_path (str, optional):
-        path used to serialize the loss and accuracy values as a JSON file.
-    start_at (int, optional):
-        starting epoch that training is resumed at when using ctrl + c training.
-"""
+"""Class for Monitoring the Training Process."""
 import os
 import json
 import matplotlib.pyplot as plt
@@ -17,23 +8,25 @@ from keras.callbacks import BaseLogger
 
 
 class TrainingMonitor(BaseLogger):
-    """Loggs our loss and accuracy to disk
-
-    Arguments:
-        BaseLogger {class} -- Keras BaseLogger class
     """
+    Loggs our loss and accuracy to disk.
+
+    Attributes:
+        fig_path (str): Path to the output plot visualizing loss and accuracy over time.
+        json_path (str): Path for serializing loss and accuracy values as a JSON file.
+        start_at (int): Starting epoch that training is resumed at when using ctrl + c training.
+        history (dict): Dictionary containing the history
+    """
+
     def __init__(self, fig_path, json_path=None, start_at=0):
-        """Initialize the training monitor
+        """
+        Initialize the training monitor.
 
-        Arguments:
-            fig_path {str} -- The path to the output plot used to visualize loss and accuracy over
-                              time.
-
-        Keyword Arguments:
-            json_path {str} -- The path used to serialize the loss and accuracy values as a JSON
-                               file. (default: {None})
-            start_at {int} -- The starting epoch that training is resumed at when using ctrl + c
-                              training. (default: {0})
+        Args:
+            fig_path (str): Path to the output plot visualizing loss and accuracy over time.
+            json_path (str, optional): Path for serializing loss and accuracy values as a JSON file.
+            start_at (int, optional): Starting epoch that training is resumed at when using
+                                      ctrl + c training.
         """
         # store the output path for the figure, the path to the JSON
         # serialized file, and the starting epoch
@@ -45,11 +38,11 @@ class TrainingMonitor(BaseLogger):
         self.history = {}
 
     def on_train_begin(self, logs=None):
-        """Update all parameters in the logs
+        """
+        Update all parameters in the logs.
 
-        Keyword Arguments:
-            logs {dict} -- dictionary of hisotory logs
-                           (default: {None)
+        Args:
+            logs (dict, optional): dictionary of hisotory logs.
         """
         # if the JSON history path exists, load the training history
         if self.json_path is not None:
@@ -60,20 +53,18 @@ class TrainingMonitor(BaseLogger):
                     # loop over the entries in the history log and trim any entries that are
                     # past the starting epoch
                     for k in self.history.keys():
-                        self.history[k] = self.history[k][:self.start_at]
+                        self.history[k] = self.history[k][: self.start_at]
 
     def on_epoch_end(self, epoch, logs=None):
-        """Serialize the loss and accuracy for both the training and validation set to disk
+        """
+        Serialize the loss and accuracy for both the training and validation set to disk.
 
         This functions automatically receives parameters from Keras and requires
         epoch and logs as parameters.
 
-        Arguments:
-            epoch {int} -- Epoch number
-
-        Keyword Arguments:
-            logs {dict} -- training and validation loss + accuracy for the current epoch
-                           (default: {None})
+        Args:
+            epoch (int): Epoch number.
+            logs (dict, optional): training and validation loss + accuracy for the current epoch
         """
         if logs is None:
             logs = {}

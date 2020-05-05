@@ -28,10 +28,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--dataset", required=True,
-                      help="path to input dataset")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to pre-trained model")
+    args.add_argument("-d", "--dataset", required=True, help="path to input dataset")
+    args.add_argument("-m", "--model", required=True, help="path to pre-trained model")
     args = vars(args.parse_args())
 
     # initialize the class labels
@@ -48,8 +46,7 @@ def main():
     image_to_array_preprocessor = ImageToArrayPreprocessor()
 
     # load the dataset from disk then scale the raw pixel intensities to the range [0, 1]
-    dataset_loader = SimpleDatasetLoader(preprocessors=[simple_preprocessor,
-                                                        image_to_array_preprocessor])
+    dataset_loader = SimpleDatasetLoader(preprocessors=[simple_preprocessor, image_to_array_preprocessor])
     (data, _) = dataset_loader.load(image_paths)
     data = data.astype("float") / 255.0
 
@@ -64,11 +61,12 @@ def main():
     for (i, image_path) in enumerate(image_paths):
         # load the example image, draw the prediction, and display it to our screen
         image = cv2.imread(image_path)
-        cv2.putText(image, "Label: {}".format(class_labels[preds[i]]),
-                    (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+        cv2.putText(
+            image, "Label: {}".format(class_labels[preds[i]]), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2
+        )
         cv2.imshow("Image", image)
         cv2.waitKey(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

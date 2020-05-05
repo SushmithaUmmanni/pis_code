@@ -12,13 +12,13 @@ from .shallownet import ShallowNet
 
 
 __all__ = [
-    'AlexNet',
-    'DeeperGoogLeNet',
-    'FCHeadNet',
-    'LeNet',
-    'MiniGoogLeNet',
-    'MiniVGGNet',
-    'NeuralStyle',
-    'ResNet',
-    'ShallowNet',
-    ]
+    "AlexNet",
+    "DeeperGoogLeNet",
+    "FCHeadNet",
+    "LeNet",
+    "MiniGoogLeNet",
+    "MiniVGGNet",
+    "NeuralStyle",
+    "ResNet",
+    "ShallowNet",
+]

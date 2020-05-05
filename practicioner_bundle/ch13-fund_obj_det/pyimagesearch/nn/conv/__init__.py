@@ -11,12 +11,12 @@ from .shallownet import ShallowNet
 
 
 __all__ = [
-    'AlexNet',
-    'DeeperGoogLeNet',
-    'FCHeadNet',
-    'LeNet',
-    'MiniGoogLeNet',
-    'MiniVGGNet',
-    'ResNet',
-    'ShallowNet',
-    ]
+    "AlexNet",
+    "DeeperGoogLeNet",
+    "FCHeadNet",
+    "LeNet",
+    "MiniGoogLeNet",
+    "MiniVGGNet",
+    "ResNet",
+    "ShallowNet",
+]

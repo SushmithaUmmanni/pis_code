@@ -47,8 +47,7 @@ def main():
     train_y = label_binarizer.fit_transform(train_y)
     test_y = label_binarizer.transform(test_y)
     # initialize the label names for the CIFAR-10 dataset
-    label_names = ["airplane", "automobile", "bird", "cat", "deer",
-                   "dog", "frog", "horse", "ship", "truck"]
+    label_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 
     # initialize the SGD optimizer, but without any learning rate decay
     print("[INFO] compiling model...")
@@ -63,15 +62,15 @@ def main():
     callbacks = [TrainingMonitor(fig_path, json_path=json_path)]
     # train the network
     print("[INFO] training network...")
-    model.fit(train_x, train_y, validation_data=(test_x, test_y),
-              batch_size=64, epochs=100, callbacks=callbacks, verbose=1)
+    model.fit(
+        train_x, train_y, validation_data=(test_x, test_y), batch_size=64, epochs=100, callbacks=callbacks, verbose=1
+    )
 
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=64)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1), target_names=label_names))
+    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_names))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -32,10 +32,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-d", "--dataset", required=True,
-                      help="path to input dataset of faces")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to output model")
+    args.add_argument("-d", "--dataset", required=True, help="path to input dataset of faces")
+    args.add_argument("-m", "--model", required=True, help="path to output model")
     args = vars(args.parse_args())
     # initialize the list of data and labels
     data = []
@@ -68,11 +66,9 @@ def main():
 
     # partition the data into training and testing splits using 80% of
     # the data for training and the remaining 20% for testing
-    (train_x, test_x, train_y, test_y) = train_test_split(data,
-                                                          labels,
-                                                          test_size=0.20,
-                                                          stratify=labels,
-                                                          random_state=42)
+    (train_x, test_x, train_y, test_y) = train_test_split(
+        data, labels, test_size=0.20, stratify=labels, random_state=42
+    )
     # initialize the model
     print("[INFO] compiling model...")
     model = LeNet.build(width=28, height=28, depth=1, classes=2)
@@ -80,19 +76,19 @@ def main():
 
     # train the network
     print("[INFO] training network...")
-    model_fit = model.fit(train_x,
-                          train_y,
-                          validation_data=(test_x, test_y),
-                          class_weight=class_weight,
-                          batch_size=64,
-                          epochs=15,
-                          verbose=1)
+    model_fit = model.fit(
+        train_x,
+        train_y,
+        validation_data=(test_x, test_y),
+        class_weight=class_weight,
+        batch_size=64,
+        epochs=15,
+        verbose=1,
+    )
     # evaluate the network
     print("[INFO] evaluating network...")
     predictions = model.predict(test_x, batch_size=64)
-    print(classification_report(test_y.argmax(axis=1),
-                                predictions.argmax(axis=1),
-                                target_names=label_encoder.classes_))
+    print(classification_report(test_y.argmax(axis=1), predictions.argmax(axis=1), target_names=label_encoder.classes_))
 
     # save the model to disk
     print("[INFO] serializing network...")
@@ -112,5 +108,5 @@ def main():
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

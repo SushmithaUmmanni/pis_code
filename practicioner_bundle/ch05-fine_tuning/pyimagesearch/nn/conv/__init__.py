@@ -6,4 +6,9 @@ from .minivggnet import MiniVGGNet
 from .fcheadnet import FCHeadNet
 
 
-__all__ = ['ShallowNet', 'LeNet', 'MiniVGGNet', 'FCHeadNet', ]
+__all__ = [
+    "ShallowNet",
+    "LeNet",
+    "MiniVGGNet",
+    "FCHeadNet",
+]

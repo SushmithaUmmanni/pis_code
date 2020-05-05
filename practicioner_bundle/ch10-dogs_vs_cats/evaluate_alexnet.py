@@ -38,32 +38,25 @@ def main():
     model = load_model(config.MODEL_PATH)
     # initialize the testing dataset generator, then make predictions on the testing data
     print("[INFO] predicting on test data (no crops)...")
-    test_gen = HDF5DatasetGenerator(config.TEST_HDF5,
-                                    64,
-                                    preprocessors=[simple_preprocessor,
-                                                   mean_preprocessor,
-                                                   image_to_array_preprocessor],
-                                    classes=2)
+    test_gen = HDF5DatasetGenerator(
+        config.TEST_HDF5,
+        64,
+        preprocessors=[simple_preprocessor, mean_preprocessor, image_to_array_preprocessor],
+        classes=2,
+    )
 
-    predictions = model.predict_generator(test_gen.generator(),
-                                          steps=test_gen.num_images // 64,
-                                          max_queue_size=10)
+    predictions = model.predict_generator(test_gen.generator(), steps=test_gen.num_images // 64, max_queue_size=10)
     # compute the rank-1 and rank-5 accuracies
     (rank1, _) = rank5_accuracy(predictions, test_gen.database["labels"])
     print("[INFO] rank-1: {:.2f}%".format(rank1 * 100))
     test_gen.close()
 
     # re-initialize the testing set generator, this time excluding the `SimplePreprocessor`
-    test_gen = HDF5DatasetGenerator(config.TEST_HDF5,
-                                    64,
-                                    preprocessors=[mean_preprocessor],
-                                    classes=2)
+    test_gen = HDF5DatasetGenerator(config.TEST_HDF5, 64, preprocessors=[mean_preprocessor], classes=2)
     predictions = []
     # initialize the progress bar
-    widgets = ["Evaluating: ", progressbar.Percentage(), " ",
-               progressbar.Bar(), " ", progressbar.ETA()]
-    progress_bar = progressbar.ProgressBar(maxval=test_gen.num_images // 64,
-                                           widgets=widgets).start()
+    widgets = ["Evaluating: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]
+    progress_bar = progressbar.ProgressBar(maxval=test_gen.num_images // 64, widgets=widgets).start()
     # loop over a single pass of the test data
     # passes=1 to indicate the testing data only needs to be looped over once
     for (i, (images, _)) in enumerate(test_gen.generator(passes=1)):
@@ -72,8 +65,7 @@ def main():
             # apply the crop preprocessor to the image to generate 10
             # separate crops, then convert them from images to arrays
             crops = crop_preprocessor.preprocess(image)
-            crops = np.array([image_to_array_preprocessor.preprocess(c)
-                              for c in crops], dtype="float32")
+            crops = np.array([image_to_array_preprocessor.preprocess(c) for c in crops], dtype="float32")
             # make predictions on the crops and then average them
             # together to obtain the final prediction
             pred = model.predict(crops)

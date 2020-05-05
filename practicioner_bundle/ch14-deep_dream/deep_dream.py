@@ -30,11 +30,11 @@ LAYERS = {
 
 # define the number of octaves, octave scale, alpha (step for  gradient ascent) number
 # of iterations, and max loss -- tweaking these values will produce different dreams
-NUM_OCTAVE = 3      # number of octaves (resolutions) to be generated
+NUM_OCTAVE = 3  # number of octaves (resolutions) to be generated
 OCTAVE_SCALE = 1.4  # defines the size of each successive octave
-ALPHA = 0.001       # step size for gradient ascent
-NUM_ITER = 50       # total number of gradient ascent operations
-MAX_LOSS = 10.0     # early stopping criteria
+ALPHA = 0.001  # step size for gradient ascent
+NUM_ITER = 50  # total number of gradient ascent operations
+MAX_LOSS = 10.0  # early stopping criteria
 
 
 def preprocess(image_path):
@@ -115,7 +115,9 @@ def eval_loss_and_gradients(X, model, loss, grads):
     # return a tuple of the loss and gradients
     return (loss, gradient)
 
+
 # todo: what is model => input tensor of the inception network. Is it a model or a tensor?
+
 
 def gradient_ascent(X, loss, grads, model, iters, alpha, max_loss=-np.inf):
     """Compute gradient ascent
@@ -166,10 +168,8 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-i", "--image", required=True,
-                      help="path to input image")
-    args.add_argument("-o", "--output", required=True,
-                      help="path to output dreamed image")
+    args.add_argument("-i", "--image", required=True, help="path to input image")
+    args.add_argument("-o", "--output", required=True, help="path to output dreamed image")
     args = vars(args.parse_args())
 
     # indicate that Keras *should not* be update the weights of any layer during the deep dream
@@ -193,7 +193,7 @@ def main():
         x = layer_map[layer_name].output
         coeff = LAYERS[layer_name]
         scaling = K.prod(K.cast(K.shape(x), "float32"))
-        loss += coeff * K.sum(K.square(x[:, 2: -2, 2: -2, :])) / scaling
+        loss += coeff * K.sum(K.square(x[:, 2:-2, 2:-2, :])) / scaling
 
     # compute the gradients of the dream with respect to loss and then normalize
     grads = K.gradients(loss, dream)[0]
@@ -228,13 +228,7 @@ def main():
         # resize the image and then apply gradient ascent
         print("[INFO] starting octave {}...".format(octave))
         image = resize_image(image, size)
-        image = gradient_ascent(image,
-                                loss,
-                                grads,
-                                model=dream,
-                                iters=NUM_ITER,
-                                alpha=ALPHA,
-                                max_loss=MAX_LOSS)
+        image = gradient_ascent(image, loss, grads, model=dream, iters=NUM_ITER, alpha=ALPHA, max_loss=MAX_LOSS)
 
         # to compute the lost detail we need two images: (1) the shrunk
         # image that has been upscaled to the current octave and (2) the

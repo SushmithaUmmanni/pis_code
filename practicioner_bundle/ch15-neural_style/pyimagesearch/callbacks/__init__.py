@@ -1,9 +1,9 @@
-"""Import custom callbacks packages
-"""
+"""Import custom callbacks packages."""
 from .trainingmonitor import TrainingMonitor
 from .epochcheckpoint import EpochCheckpoint
 
+
 __all__ = [
-    'TrainingMonitor',
-    'EpochCheckpoint',
-    ]
+    "TrainingMonitor",
+    "EpochCheckpoint",
+]

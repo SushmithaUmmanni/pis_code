@@ -18,6 +18,7 @@ class MiniVGGNet:
     Returns:
         [obj] -- MiniVGGNet model
     """
+
     @staticmethod
     def build(width, height, depth, classes):
         """Build MiniVGGNet model

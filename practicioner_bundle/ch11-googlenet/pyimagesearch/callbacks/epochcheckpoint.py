@@ -18,6 +18,7 @@ from keras.callbacks import Callback
 class EpochCheckpoint(Callback):
     """Serialize weights at target epoch
     """
+
     def __init__(self, output_path, every=5, start_at=0):
         """Initialized model checkpointer
 

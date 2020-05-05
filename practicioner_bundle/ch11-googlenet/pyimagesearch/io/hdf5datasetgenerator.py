@@ -27,8 +27,8 @@ import h5py
 class HDF5DatasetGenerator:
     """Dataset Generator
     """
-    def __init__(self, dataset_path, batch_size, preprocessors=None,
-                 augmentation=None, binarize=True, classes=2):
+
+    def __init__(self, dataset_path, batch_size, preprocessors=None, augmentation=None, binarize=True, classes=2):
         """Initialize the database generatro
 
         Arguments:
@@ -68,8 +68,8 @@ class HDF5DatasetGenerator:
             # loop over the HDF5 database
             for i in np.arange(0, self.num_images, self.batch_size):
                 # extract the images and labels from the HDF database
-                images = self.database["images"][i: i + self.batch_size]
-                labels = self.database["labels"][i: i + self.batch_size]
+                images = self.database["images"][i : i + self.batch_size]
+                labels = self.database["labels"][i : i + self.batch_size]
                 # check to see if the labels should be binarized
                 if self.binarize:
                     labels = np_utils.to_categorical(labels, self.classes)
@@ -88,9 +88,7 @@ class HDF5DatasetGenerator:
                     images = np.array(processed_images)
                 # if the data augmenator exists, apply it
                 if self.augmentation is not None:
-                    (images, labels) = next(self.augmentation.flow(images,
-                                                                   labels,
-                                                                   batch_size=self.batch_size))
+                    (images, labels) = next(self.augmentation.flow(images, labels, batch_size=self.batch_size))
                 # yield a tuple of images and labels
                 yield (images, labels)
             # increment the total number of epochs

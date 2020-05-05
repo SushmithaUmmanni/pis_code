@@ -27,12 +27,9 @@ def main():
     """
     # construct the argument parse and parse the arguments
     args = argparse.ArgumentParser()
-    args.add_argument("-c", "--cascade", required=True,
-                      help="path to where the face cascade resides")
-    args.add_argument("-m", "--model", required=True,
-                      help="path to pre-trained smile detector CNN")
-    args.add_argument("-v", "--video",
-                      help="path to the (optional) video file")
+    args.add_argument("-c", "--cascade", required=True, help="path to where the face cascade resides")
+    args.add_argument("-m", "--model", required=True, help="path to pre-trained smile detector CNN")
+    args.add_argument("-v", "--video", help="path to the (optional) video file")
     args = vars(args.parse_args())
 
     # load the face detector cascade and smile detector CNN
@@ -59,13 +56,14 @@ def main():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         frame_clone = frame.copy()
         # detect faces in the input frame, then clone the frame so that we can draw on it
-        rects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30),
-                                          flags=cv2.CASCADE_SCALE_IMAGE)
+        rects = detector.detectMultiScale(
+            gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE
+        )
         # loop over the face bounding boxes
         for (x, y, width, height) in rects:
             # extract the ROI of the face from the grayscale image, resize it to a fixed 28x28
             # pixels, and then prepare the ROI for classification via the CNN
-            roi = gray[y:y + height, x:x + width]
+            roi = gray[y : y + height, x : x + width]
             roi = cv2.resize(roi, (28, 28))
             roi = roi.astype("float") / 255.0
             roi = img_to_array(roi)
@@ -76,8 +74,7 @@ def main():
             label = "Smiling" if smiling > not_smiling else "Not Smiling"
             # display the label and bounding box rectangle on the output
             # frame
-            cv2.putText(frame_clone, label, (x, y - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+            cv2.putText(frame_clone, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
             cv2.rectangle(frame_clone, (x, y), (x + width, y + height), (0, 0, 255), 2)
         # show our detected faces along with smiling/not smiling labels
         cv2.imshow("Face", frame_clone)
@@ -90,5 +87,5 @@ def main():
     cv2.destroyAllWindows()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

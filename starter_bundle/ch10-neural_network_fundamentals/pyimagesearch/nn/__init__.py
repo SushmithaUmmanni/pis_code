@@ -5,6 +5,6 @@ from .neuralnetwork import NeuralNetwork
 
 
 __all__ = [
-    'Perceptron',
-    'NeuralNetwork',
-    ]
+    "Perceptron",
+    "NeuralNetwork",
+]
